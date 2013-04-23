@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <meta charset='utf-8'/>
+    <style>
+      body { color: green; background-color: black; font-family: monospace; font-size: 150%}
+      a:link { color: blue }
+      a:active { color: blue }
+      a:visited { color: #bbb }
+      table { border-collapse: collapse }
+      td, th { padding: 1ex; border: solid green thin }
+      .nosp { word-wrap: break-word }
+      h3 { text-align: center }
+    </style>
+    <script type='text/javascript'>
+      {% include 'incremental.js' %}
+    </script>
+    {% if not static %}
+    <script type='text/javascript'>
+      incremental.defaultSpeed = 100;
+      window.onload = function() { countdown(); incremental.start(); }
+    </script>
+    {% endif %}
+
+    <script type='text/javascript'>
+      {% include 'countdown.js' %}
+    </script>
+  </head>
+  <body>
+    <h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+    {% block mission %}
+    <p class='incremental' data-incremental-by-letter>Relaxez-vous: pas de mission pour le moment.</p>
+    <p class='incremental'>L</p>
+    <p class='incremental'></p>
+    {% endblock mission %}
+</body>
+</html>

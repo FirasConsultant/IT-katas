@@ -1,8 +1,42 @@
-from webapp2 import WSGIApplication, Route
+from webapp2 import WSGIApplication, Route, RequestHandler
 import xml.etree.ElementTree as ET
 from google.appengine.api import urlfetch
 from almost_secure_cookie import SessionHandler as SH
+import jinja2
+from os.path import join, dirname
+import yaml
 
+# config
+try:
+    config = yaml.load(open('config.yaml', 'r'))
+except IOError:
+    config = {}
+
+# Template engine
+class TemplateHandler(RequestHandler):
+    @staticmethod
+    def guess_autoescape(template_name):
+        if template_name is None or '.' not in template_name:
+            return False
+        ext = template_name.rsplit('.', 1)[1]
+        return ext in ('html', 'htm', 'xml')
+
+    jinja = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            config.get('template_dir') or
+            join(dirname(__file__), 'templates')),
+        autoescape=guess_autoescape,
+        extensions=['jinja2.ext.autoescape']        
+        )
+
+    def cnr(self, view, values):
+        self.response.write(self.jinja.get_template(view).render(values))
+
+    def compile(self, view):
+        return self.jinja.get_template(view)
+        
+
+# Authentication management
 class AuthHandler(SH):
     """
     This handler extends the SessionHandler by verifying that the user
@@ -20,16 +54,13 @@ class AuthHandler(SH):
         else:
             self.redirect_to('login', path=self.request.path)
 
-class Login(SH):
+class Login(SH, TemplateHandler):
     """
     This handles logins using a CAS SSO server (such as cas-dev.uvsq.fr)
     """
-    def __init__(self, req, res,
-                 cas_host='https://cas-dev.uvsq.fr',
-                 next='http://proust.prism.uvsq.fr:5999/loc:8080/login'):
-        self.cas_host = cas_host
-        self.next = next
-        self.initialize(req, res)
+    # configuration
+    cas_host = 'https://cas-dev.uvsq.fr'
+    next = 'http://proust.prism.uvsq.fr:5999/loc:8080/login'
 
     def get(self, path='/'):
         next = self.next + path
@@ -42,7 +73,11 @@ class Login(SH):
                 self.session['userid'] = root[0][0].text
                 self.redirect(path)
 
-        self.response.write('<a href="%s/login?service=%s">login</a>' % (self.cas_host, next))
+        self.cnr('login.html', {
+            'title': 'Login',
+            'cas_host': self.cas_host,
+            'next': next
+            })
 
 class Logout(SH):
     """
@@ -53,19 +88,23 @@ class Logout(SH):
         del self.session['userid']
         self.redirect('/login')
 
+
+# Individual Katas
+import vigenere
+
+
 class Index(AuthHandler):
     def secure_get(self):
         self.response.write('Hello, %s' % self.session['userid'])
 
-class Vigenere(AuthHandler):
-    def secure_get(self):
-        self.response.write('Hello, Vigenere')
 
+# Build the app
 routes = [
-    Route('/', Index),
-    Route('/login', Login),
-    Route('/login<path:/.*>', Login, name='login'),
-    Route('/logout', Logout),
-    Route('/vigenere', Vigenere),
+Route('/', Index),
+Route('/login', Login),
+Route('/login<path:/.*>', Login, name='login'),
+Route('/logout', Logout),
+Route('/vigenere', vigenere.Vigenere, vigenere.Vigenere.__name__),
+Route('/vigenere/download', vigenere.VigenereDownload),    
 ]
-app = WSGIApplication(routes, debug=True)
+app = WSGIApplication(routes, debug=True, config=config)
