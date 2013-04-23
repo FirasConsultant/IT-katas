@@ -42,15 +42,9 @@ class AuthHandler(SH):
     This handler extends the SessionHandler by verifying that the user
     is logged-in before proceeding to secure_get or secure_post
     """
-    def get(self, *args, **kwds):
+    def dispatch(self):
         if self.session.has_key('userid'):
-            self.secure_get(*args, **kwds)
-        else:
-            self.redirect_to('login', path=self.request.path)
-
-    def post(self, *args, **kwds):
-        if self.session.has_key('userid'):
-            self.secure_post(*args, **kwds)
+            super(AuthHandler, self).dispatch()
         else:
             self.redirect_to('login', path=self.request.path)
 
@@ -94,7 +88,7 @@ import vigenere
 
 
 class Index(AuthHandler):
-    def secure_get(self):
+    def get(self):
         self.response.write('Hello, %s' % self.session['userid'])
 
 

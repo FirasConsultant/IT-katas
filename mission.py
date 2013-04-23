@@ -5,7 +5,9 @@ class Mission(AH):
     '''
     Class factoring common initialization for all missions
     '''
-    def start_mission(self, deadline=None):
+    def __init__(self, req, res, deadline=None):
+        super(Mission, self).__init__(req, res)
+
         boss = self.app.config.get('boss') or 'lucadefe'
         self.agent = ((self.session['userid'] == boss
                        and self.request.GET.get('studid'))

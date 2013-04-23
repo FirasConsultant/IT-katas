@@ -15,10 +15,13 @@ class SessionHandler(webapp2.RequestHandler):
     """
     Handlers wanting a session can extend this class.
     """
-    def dispatch(self):
+    def __init__(self, req, res):
+        self.initialize(req, res)
         self.session = Session(self)
+        
+    def dispatch(self):
         try:
-            webapp2.RequestHandler.dispatch(self)
+            super(SessionHandler, self).dispatch()
         finally:
             self.session.send_cookie()
 
