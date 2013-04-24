@@ -10,22 +10,7 @@ import UserDict
 
 class SessionError(Exception):
     pass
-
-class SessionHandler(webapp2.RequestHandler):
-    """
-    Handlers wanting a session can extend this class.
-    """
-    def __init__(self, req, res):
-        self.initialize(req, res)
-        self.session = Session(self)
-        
-    def dispatch(self):
-        try:
-            super(SessionHandler, self).dispatch()
-        finally:
-            self.session.send_cookie()
-
-
+    
 class Session(UserDict.DictMixin):
     """
     This class implements the session
@@ -92,3 +77,15 @@ class Session(UserDict.DictMixin):
         """
         ser = str(int(time.time()) + self.max_age) + '|' + json.dumps(self.dict)
         return md5(ser).hexdigest()[0:8] + '|' + ser
+
+
+def with_session(meth):
+    """
+    Decorator to add session management to a handler method
+    """
+    def wrapper(self, *args, **kw):
+        self.session = Session(self)
+        res = meth(self, *args, **kw)
+        self.session.send_cookie()
+        return res
+    return wrapper

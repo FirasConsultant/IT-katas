@@ -1,18 +1,38 @@
-from main import AuthHandler as AH
+from main import loggedin
 import datetime
+import logging
 
-class Mission(AH):
+def mission(*ymdh):
     '''
-    Class factoring common initialization for all missions
+    Decorator factoring common initialization for all missions
     '''
-    def __init__(self, req, res, deadline=None):
-        super(Mission, self).__init__(req, res)
+    def decorator(meth):
+        try:
+            remaining = datetime.datetime(*ymdh) - datetime.datetime.today()
+        except:
+            remaining = None
 
-        boss = self.app.config.get('boss') or 'lucadefe'
-        self.agent = ((self.session['userid'] == boss
-                       and self.request.GET.get('studid'))
-                      or self.session['userid'])
-        self.solve = (self.session['userid'] == boss and
-                     self.request.GET.has_key('solve'))
-        self.remaining = deadline is not None and deadline - datetime.datetime.today()
-        self.static = self.request.GET.has_key('static')
+        def wrapper(self, *args, **kw):
+            self._agent = ((self.request.registry['user'].is_boss
+                            and self.request.GET.get('studid'))
+                           or str(self.request.registry['user']))
+            self._agent_at = ((self.request.registry['user'].is_boss
+                               and self.request.GET.get('studid'))
+                              or repr(self.request.registry['user']))
+            self._solve = (self.request.registry['user'].is_boss and
+                           self.request.GET.has_key('solve'))
+            self._countdown = remaining and {
+                'rem': remaining,
+                'expired': remaining <= datetime.timedelta(0),
+                }
+            self._static = self.request.GET.has_key('static')
+
+            logging.info('Request from %s, user %s, as %s' % (str(self.request.remote_addr),
+                                                             str(self.request.registry['user']),
+                                                             self._agent_at))
+            
+            return meth(self, *args, **kw)
+
+        return loggedin(wrapper)
+
+    return decorator
