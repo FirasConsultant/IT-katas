@@ -76,12 +76,9 @@ class Vigenere(VigCommon, TH):
 
 class VigenereDownload(VigCommon):
     def get(self):
-        user = req.headers_in['REMOTE_USER']
-        id, key, text, ciph = _init_vig(req, user, studid)
-        
-        req.headers_out['Content-Type'] = 'text/plain'
-        req.headers_out['Content-Disposition'] = 'attachment;filename="cipher.txt"'
-        return ciph
-        pass
+        self.response.content_type = 'text/plain'
+        self.response.content_disposition = 'attachment;filename="cipher.txt"'
+        self.response.write(self.ciph)
+
 
 
