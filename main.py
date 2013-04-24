@@ -14,7 +14,8 @@ import base64
 
 # config
 try:
-    secret = base64.b64encode(Random.new().read(16))
+    secret = base64.b64encode(Random.new().read(15))
+    logging.info('Using secret: ' + secret)
 except:
     logging.warn("Using Pulcinella's secret.")
     secret = "Pulcinella's"
