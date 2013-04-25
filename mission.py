@@ -13,13 +13,13 @@ def mission(*ymdh):
             remaining = None
 
         def wrapper(self, *args, **kw):
-            self._agent = ((self.request.registry['user'].is_boss
+            self._agent = ((self.session['user'].is_boss
                             and self.request.GET.get('studid'))
-                           or str(self.request.registry['user']))
-            self._agent_at = ((self.request.registry['user'].is_boss
+                           or str(self.session['user']))
+            self._agent_at = ((self.session['user'].is_boss
                                and self.request.GET.get('studid'))
-                              or repr(self.request.registry['user']))
-            self._solve = (self.request.registry['user'].is_boss and
+                              or repr(self.session['user']))
+            self._solve = (self.session['user'].is_boss and
                            self.request.GET.has_key('solve'))
             self._countdown = remaining and {
                 'rem': remaining,
@@ -27,9 +27,11 @@ def mission(*ymdh):
                 }
             self._static = self.request.GET.has_key('static')
 
-            logging.info('Request from %s, user %s, as %s' % (str(self.request.remote_addr),
-                                                             str(self.request.registry['user']),
-                                                             self._agent_at))
+            logging.info('Request from %s, user %s, as %s' 
+                         % (str(self.request.remote_addr),
+                            self.session['user'].get('realname', 
+                                                     self.session['user']),
+                            self._agent_at))
             
             return meth(self, *args, **kw)
 

@@ -5,6 +5,7 @@ from webapp2 import WSGIApplication, Route, RequestHandler
 from webapp2_extras import jinja2
 import yaml
 import logging
+import urllib
 from google.appengine.api import urlfetch
 import xml.etree.ElementTree as ET
 from almost_secure_cookie import with_session
@@ -13,6 +14,7 @@ from os.path import join, dirname
 from os import environ
 from Crypto import Random
 import base64
+import UserDict
 
 # config
 try:
@@ -45,13 +47,17 @@ class TemplateHandler(RequestHandler):
         
 
 # Authentication management
-class User(object):
+class User(dict):
     """
     User model
     """
-    def __init__(self, name, domain=None):
-        self.name = name
-        self.domain = domain
+    def __init__(self, *args, **kw):
+        super(User, self).__init__(*args, **kw)
+        if 'name' not in self:
+            raise ValueError('Missing user name')
+
+        self.name = self['name']
+        self.domain = self.get('domain')
         self.is_boss = (self.__repr__()
                         in webapp2.get_app().config['bosses'])
 
@@ -59,7 +65,8 @@ class User(object):
         return self.name
 
     def __repr__(self):
-        return self.__str__() + ('' if self.domain is None else '@' + self.domain )
+        return self.__str__() + ('' if self.domain is None else '@' + self.domain)
+
 
 def loggedin(meth):
     """
@@ -68,7 +75,7 @@ def loggedin(meth):
     def wrapper(self, *args, **kw):
         user = self.session.get('user')
         if user:
-            self.request.registry['user'] = User(**user)
+            self.session['user'] = User(user)
             return meth(self, *args, **kw)
         else:
             return self.redirect_to('login', path=self.request.path)
@@ -76,25 +83,50 @@ def loggedin(meth):
 
 class Login(TemplateHandler):
     """
-    This handles logins using a CAS 2.0 SSO server (such as cas-dev.uvsq.fr)
+    This handles logins using a CAS 2.0 SSO server with SAML 1.1
+    attributes (such as cas-dev.uvsq.fr)
     """
 
     @with_session
     def get(self, path='/'):
         cas_host = self.app.config['cas_host']
         domain = urlparse(cas_host).netloc
-        service = (self.app.config.get('cas_service')
-                   or self.req.host_url) + self.uri_for('login', path=path)
+        service = urllib.quote((self.app.config.get('cas_service')
+                   or self.req.host_url) + self.uri_for('login', path=path), '')
     
         ticket = self.request.GET.get('ticket')
         if ticket:
-            url =  '%s/serviceValidate?service=%s&ticket=%s' % (cas_host, service, ticket)
-            root = ET.fromstring(urlfetch.fetch(url, validate_certificate=True).content)
-            if root[0].tag.rfind('authenticationSuccess') >= 0:
-                self.session['user'] = {
-                    'name' : root[0][0].text,
-                    'domain': domain
-                    }
+            url =  '%s/samlValidate?TARGET=%s' % (cas_host, service)
+            saml = '''
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Header/>
+  <SOAP-ENV:Body>
+    <samlp:Request xmlns:samlp="urn:oasis:names:tc:SAML:1.0:protocol"
+     MajorVersion="1" MinorVersion="1">
+      <samlp:AssertionArtifact>%s</samlp:AssertionArtifact>
+    </samlp:Request>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+''' % ticket
+            root = ET.fromstring(
+                urlfetch.fetch(
+                    url, payload=saml, method=urlfetch.POST,
+                    validate_certificate=True,
+                    headers={'soapaction':
+                                 'http://www.oasis-open.org/committees/security',
+                             'content-type': 'text/xml',
+                             }
+                    ).content)
+            if root.findall(".//*[@Value='samlp:Success']"):
+                user = {attr.get('AttributeName'):
+                            [val.text for val in attr]
+                    for attr in root.findall(".//*[@AttributeName]")}
+                self.session['user'] = User(
+                    name=user['login'][0],
+                    domain=domain,
+                    realname=user['displayname'][0],
+                    mail=user['mail'][0],
+                    )
                 self.redirect(path)
 
         self.cnr('login.html', title='Login',
