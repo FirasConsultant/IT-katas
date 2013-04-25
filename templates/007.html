@@ -12,6 +12,14 @@
       td, th { padding: 1ex; border: solid green thin }
       .nosp { word-wrap: break-word }
       h3 { text-align: center }
+      input {
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      background-color: inherit;
+      border-color: green;
+      text-shadow: inherit;
+      }
     </style>
     <script type='text/javascript'>
       {% include 'incremental.js' %}
@@ -28,7 +36,9 @@
     </script>
   </head>
   <body>
+    {% block head %}
     <h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+    {% endblock head %}
 
     {% block mission %}
     <p class='incremental' data-incremental-by-letter>Relaxez-vous: pas de mission pour le moment.</p>

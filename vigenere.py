@@ -33,7 +33,7 @@ class Vigenere(TH):
                  decryptext=self._solve and _cryptanalysis(self._ciph),
                  countdown=self._countdown,
                  static=self._static,
-                 uri=self.uri_for(self.__class__.__name__)
+                 uri_dnld=self.uri_for(VigenereDownload.__name__)
                  )
 
 class VigenereDownload(RequestHandler):
@@ -44,6 +44,8 @@ class VigenereDownload(RequestHandler):
         self.response.content_disposition = 'attachment;filename="cipher.txt"'
         self.response.write(self._ciph)
 
+routes = [('', Vigenere),
+          ('download', VigenereDownload)]
 
 def _gen_key(salt):
     random.seed(salt)

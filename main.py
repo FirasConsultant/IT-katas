@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import webapp2
 from webapp2 import WSGIApplication, Route, RequestHandler
 from webapp2_extras import jinja2
@@ -113,12 +115,23 @@ class Logout(RequestHandler):
 
 
 # Individual Katas
-import vigenere
+katas = [
+    ('vigenere', 'Cryptanalyse du chiffre de Vigenère'),
+    ('dlog', 'Calcul de logarithmes discrets modulo un nombre premier'),
+    ]
+kmodules = {k[0]:__import__(k[0]) for k in katas}
+kroutes = [Route(('/%s/%s' % (kata, route)).rstrip('/'),
+                 Class, name=Class.__name__)
+           for kata, module in kmodules.items()
+           for route, Class in module.routes]
 
 class Index(RequestHandler):
-    @loggedin
     def get(self):
-        self.response.write('Hello, %s' % self.request.registry['user'])
+        self.response.write('<ul>')
+        for k, desc in katas:
+            self.response.write('<li><a href="/%s">%s</b></a>.</li>' 
+                                % (k, desc))
+        self.response.write('</ul>')
 
 
 # Build the app
@@ -127,10 +140,8 @@ routes = [
     Route('/login', Login),
     Route('/login<path:/.*>', Login, name='login'),
     Route('/logout', Logout),
-    Route('/vigenere', vigenere.Vigenere, vigenere.Vigenere.__name__),
-    Route('/vigenere/download', vigenere.VigenereDownload),    
     ]
-app = WSGIApplication(routes,
+app = WSGIApplication(routes + kroutes,
                       debug=environ.get('SERVER_SOFTWARE').startswith('Dev'),
                       config=config)
 

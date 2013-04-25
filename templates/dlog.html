@@ -1,0 +1,68 @@
+{% extends '007.html' %}
+
+{% macro goto(level) %}level={{ level }}{% if static %}&static{% endif %}{% if solve %}&solve{% endif %}{% endmacro %}
+
+{% block head %}
+<h3 style='text-align:center'>
+  {% if level > 0 %}
+  <a href='?{{ goto(level-1) }}'>&lt;&lt;&lt;</a>
+  {% endif %}
+  <span class='incremental' data-incremental-by-letter>Niveau {{ level + 1 }}</span>
+  {% if level < max_level %}
+  <a href='?{{ goto(level+1) }}'>&gt;&gt;&gt;</a>
+  {% endif %}
+</h3>
+
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+{% endblock head %}
+
+
+
+{% block mission %}
+
+{% if level == 0 %}
+<p class='incremental' data-incremental-by-letter>Hellman (ce nom ne
+m'a jamais rassure...) prepare quelque chose de louche avec ses
+logarithmes discrets. Nous voulons que vous alliez le surveiller de
+pres, mais faites attention: il s'agit d'un criminel dangereux et tres
+astucieux, ne vous faites pas prendre au pieges de ses logarithmes...</p>
+<p class='incremental' data-incremental-by-letter>Pour vous preparer,
+nous avons choisi pour vous un calcul de log discret modulo un nombre
+premier de 20 bits, que voici de suite. Resolvez-le avant de
+poursuivre votre mission.</p> 
+{% endif %}
+
+{% if p %}
+<form style='text-align:center' class='incremental' action='{{ play_uri }}'>
+  <p>
+    log<sub>{{ gen }}</sub> {{ value }} = <input type='number' name='log'/> mod {{ p }}
+    <input type='submit' value='Vérifier' />
+  </p>
+  <input type='hidden' name='level' value='{{ level }}'/>
+</form>
+
+{% if p %}
+{% if not countdown.expired %}
+<p><span  class='incremental' data-incremental-by-letter >
+    Temps restant: </span>{% include 'countdown.html' %}<span 
+    class='incremental' data-incremental-by-letter >.</span>
+</p>
+{% else %}
+<p class='incremental' data-incremental-by-letter >
+  Le temps à votre disposition est arrivé à échéance, en conséquence vous allez être
+  éliminé.</p>
+{% endif %}
+{% endif %}
+
+
+{% if solve %}
+<p>Hi, boss.</p>
+
+<p>Here's the log: {{ exp }}</p>
+
+{% endif %}
+{% endif %}
+
+<p class='incremental'>L</p>
+<p class='incremental'></p>
+{% endblock %}
