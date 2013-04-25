@@ -14,7 +14,6 @@ from os.path import join, dirname
 from os import environ
 from Crypto import Random
 import base64
-import UserDict
 
 # config
 try:

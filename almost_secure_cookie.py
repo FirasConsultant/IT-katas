@@ -6,12 +6,11 @@ from hashlib import md5
 import json
 import time
 import webapp2
-import UserDict
 
 class SessionError(Exception):
     pass
     
-class Session(UserDict.DictMixin):
+class Session(dict):
     """
     This class implements the session
     """
@@ -23,20 +22,21 @@ class Session(UserDict.DictMixin):
         - `secret` is the secret string used for MACing
         - `max_age` is the expiration time for the cookie
         """
-        self.hndl = hndl
-        self.cookie_name = cookie_name
-        self.secret = (secret or hndl.app.config.get('secret') or "Pulcinella's").replace('|', '')
-        self.max_age = max_age or hndl.app.config.get('session_age') or 60*60*24
+        super(Session, self).__init__()
+        self._hndl = hndl
+        self._cookie_name = cookie_name
+        self._secret = (secret or hndl.app.config.get('secret') or "Pulcinella's").replace('|', '')
+        self._max_age = max_age or hndl.app.config.get('session_age') or 60*60*24
 
         try:
-            self._parse_cookie(hndl.request.cookies[self.cookie_name])
+            self._parse_cookie(hndl.request.cookies[self._cookie_name])
         except (KeyError, SessionError, TypeError) as e:
-            self.dict = {}
+            pass
 
     def send_cookie(self):
-        self.hndl.response.set_cookie(self.cookie_name,
-                                      self._make_cookie(),
-                                      max_age=self.max_age)
+        self._hndl.response.set_cookie(self._cookie_name,
+                                       self._make_cookie(),
+                                       max_age=self._max_age)
 
 
     def __setitem__(self, key, val):
@@ -46,16 +46,7 @@ class Session(UserDict.DictMixin):
             json.dumps(val)
         except TypeError:
             raise SessionError("Values must be JSONable")
-        self.dict[key] = val
-
-    def __getitem__(self, key):
-        return self.dict[key]
-    
-    def __delitem__(self, key):
-        del self.dict[key]
-        
-    def keys(self):
-        return self.dict.keys()
+        super(Session, self).__setitem__(key, val)
 
     def _parse_cookie(self, cookie):
         """
@@ -68,14 +59,14 @@ class Session(UserDict.DictMixin):
         exp, _, dict = ser.partition('|')
         if int(exp) < time.time():
             raise SessionError('Cookie expired')
-        self.dict = json.loads(dict)
+        self.update(json.loads(dict))
 
     def _make_cookie(self):
         """
         Serializes the session dictionary, adds an expiration timestamp,
         and MACs it with a very insecure variant of HMAC.
         """
-        ser = str(int(time.time()) + self.max_age) + '|' + json.dumps(self.dict)
+        ser = str(int(time.time()) + self._max_age) + '|' + json.dumps(self)
         return md5(ser).hexdigest()[0:8] + '|' + ser
 
 
