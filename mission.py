@@ -1,4 +1,4 @@
-from main import loggedin
+from auth import loggedin
 import datetime
 import logging
 
