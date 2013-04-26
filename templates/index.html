@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>IT Katas: learn Information Theory like Karate!</title>
+    <style>
+      ul { list-style-type: none }
+      #logins li { 
+        display: inline-block;
+        padding: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id='logins'>
+      {% if not user %}
+      <li><a href='{{ cas_login }}'>S'identifier avec l'UVSQ</a></li>
+      <li><a href='{{ google_login }}'>S'identifier avec Google</a></li>
+      {% else %}
+      <li>Vous êtes identifié en tant que {{ user }}, <a href='{{ logout }}'>se déconnecter</a>.</li>
+      {% endif %}
+    </ul>
+
+    <p>Ce site est un recueil de <em>katas</em>, petits exercices
+      isolés de programmation proposant un défi à l'étudiant, dans le
+      but de lui faire maîtriser les concepts de base de la théorie de
+      l'information (codage, correction d'erreur, chiffrement).</p>
+
+    <p>Ces exercices sont utilisés, en particulier, dans le cours de
+      licence <a href='http://apollinaire.prism.uvsq.fr/'>IN420 -
+      Algorithmique pour la Cryptographie</a> de
+      l'<a href='http://www.uvsq.fr'>Université de Versailles - Saint
+      Quentin en Yvelines</a></p>
+
+    <p>Voici la liste des <em>katas</em> disponibles:</p>
+
+    <ul id='katas'>
+      {% for (k, desc) in katas %}
+      <li><a href='/{{ k }}'>{{ desc }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <p>Le code source des <em>katas</em> est disponible
+      sur <a href='https://github.com/defeo/it-katas'>github</a>.  Il
+      constitue lui même un <em>kata</em>, car il cache des failles de
+      sécurité intéressantes du point de vue cryptologique...</p>
+  </body>
+</html>
