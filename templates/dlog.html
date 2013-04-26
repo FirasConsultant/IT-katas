@@ -1,5 +1,7 @@
 {% extends '007.html' %}
 
+{% block title %}IT Katas - Logs Discrets{% endblock %}
+
 {% macro goto(level) %}level={{ level }}{% if static %}&static{% endif %}{% if solve %}&solve{% endif %}{% endmacro %}
 
 {% block head %}
