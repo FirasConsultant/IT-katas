@@ -3,6 +3,7 @@ from webapp2 import RequestHandler, abort
 from almost_secure_cookie import Session
 from mission import mission
 import random
+import logging
 
 levels = [
     (20, 1048583, 5,
@@ -104,6 +105,9 @@ class DLogPlay(TH):
         if self._level == self._max_level:
             self._level_store['level'] = self._level + 1
             self._level_store.send_cookie()
+            logging.warning('%s broke level %s'
+                            % (self.session['user'].friendly(), 
+                               self._level))
             
         return self.redirect_to(DLog.__name__, level=self._level + 1)
 

@@ -29,8 +29,7 @@ def mission(*ymdh):
 
             logging.info('Request from %s, user %s, as %s' 
                          % (str(self.request.remote_addr),
-                            self.session['user'].get('realname', 
-                                                     self.session['user']),
+                            self.session['user'].friendly(),
                             self._agent_at))
             
             return meth(self, *args, **kw)

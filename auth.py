@@ -34,6 +34,9 @@ class User(dict):
     def __repr__(self):
         return self.__str__() + ('' if self.domain is None else '@' + self.domain)
 
+    def friendly(self):
+        return self.get('realname') or self.__str__()
+
     def __nonzero__(self):
         return True
 
