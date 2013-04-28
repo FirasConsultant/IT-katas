@@ -8,7 +8,6 @@ import logging
 from almost_secure_cookie import with_session
 from os.path import join, dirname
 from os import environ
-from Crypto import Random
 import base64
 from auth import CASLogin, GoogleLogin, Logout, loggedin
 
@@ -21,24 +20,21 @@ katas = [
 
 
 # config
-try:
-    secret = base64.b64encode(Random.new().read(15))
-    logging.info('Using secret: ' + secret)
-except:
-    logging.warn("Using Pulcinella's secret.")
-    secret = "Pulcinella's"
-
 config = {
     'cas_host': 'https://cas-dev.uvsq.fr',
     'bosses': ['lucadefe@cas-dev.uvsq.fr', 
-               '109150913449318350064@google.com'],
-    'secret':  secret
+               '109150913449318350064@google.com',
+               '110941909500866125046@google.com'],
+    'secret':  "Pulcinella's",
     }
 
 try:
     config.update(yaml.load(open('config.yaml', 'r')))
 except IOError:
     pass
+
+if config['secret'] == "Pulcinella's":
+    logging.warn("Using Pulcinella's secret.")
 
 
 # Template engine
