@@ -6,6 +6,9 @@ from hashlib import md5
 import json
 import time
 import webapp2
+import os
+
+API_VERSION = os.environ.get('CURRENT_VERSION_ID').split('.')[0]
 
 class SessionError(Exception):
     pass
@@ -54,7 +57,9 @@ class Session(dict):
         deserializes it into the session dictionary
         """
         mac, _, ser = cookie.partition('|')
-        if md5(ser).hexdigest()[0:8] != mac:
+        if md5(self._secret + '|'
+               + API_VERSION + '|'
+               + ser).hexdigest()[0:8] != mac:
             raise SessionError('MAC verification failed')
         exp, _, dict = ser.partition('|')
         if int(exp) < time.time():
@@ -67,7 +72,9 @@ class Session(dict):
         and MACs it with a very insecure variant of HMAC.
         """
         ser = str(int(time.time()) + self._max_age) + '|' + json.dumps(self)
-        return md5(ser).hexdigest()[0:8] + '|' + ser
+        return md5(self._secret + '|' 
+                   + API_VERSION + '|'
+                   + ser).hexdigest()[0:8] + '|' + ser
 
 
 def with_session(meth):
