@@ -4,6 +4,8 @@ from almost_secure_cookie import Session
 from mission import mission
 import random
 import logging
+from google.appengine.ext import db
+
 
 levels = [
     (20, 1048583, 5,
@@ -28,21 +30,26 @@ levels = [
      ['']),
 ]
 
+
+# Models
+class Dlog(db.Model):
+    pass
+class Player(db.Model):
+    level = db.IntegerProperty(required=True)
+# Create root element
+dbroot = Dlog.get_or_insert(key_name='root')
+
 def init(meth):
     """
     Decorator initializing common variables.
     """
     def wrapper(self, *args, **kw):
-        self._level_store = Session(self, cookie_name='dlog.level', max_age=30*24*60*60)
-
-        try:
-            self._max_level = int(self._level_store.get('level'))
-        except (ValueError, TypeError):
-            self._max_level = 0
-        self._max_level = min(max(0, self._max_level), len(levels))
+        self._player = Player.get_or_insert(self._agent_at, level=0)
 
         if self._solve:
             self._max_level = len(levels) - 1
+        else:
+            self._max_level = self._player.level
 
         try:
             self._level = int(self.request.get('level'))
@@ -102,9 +109,9 @@ class DLogPlay(TH):
                             level=self._level,
                             uri=self.uri_for(DLog.__name__))
 
-        if self._level == self._max_level:
-            self._level_store['level'] = self._level + 1
-            self._level_store.send_cookie()
+        if self._level == self._player.level:
+            self._player.level += 1
+            self._player.put()
             logging.warning('%s broke level %s'
                             % (self.session['user'].friendly(), 
                                self._level))
