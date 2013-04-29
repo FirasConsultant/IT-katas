@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block title %}IT Katas - Logs Discrets{% endblock %}
+
+{% block body %}
+
+{% if fail %}
+  <h3 style='text-align:center'><a href='{{ uri }}'>Erreur! Essayez à nouveau</a></h3>
+{% else %}
+  {{ message |safe }}
+  <h3><a href='{{ uri }}'>Passer au niveau suivant</a></h3>
+{% endif %}
+
+{% endblock body %}
