@@ -1,0 +1,25 @@
+html, body { 
+    color: green;
+    background-color: black;
+}
+body {
+    padding: 0 1ex;
+    font-family: monospace; 
+    font-size: 150%
+}
+a:link { color: blue }
+a:active { color: blue }
+a:visited { color: #bbb }
+table { border-collapse: collapse }
+td, th { padding: 1ex; border: solid green thin }
+input {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: inherit;
+    border-color: green;
+    text-shadow: inherit;
+}
+
+.nosp { word-wrap: break-word }
+h3 { text-align: center }

@@ -1,8 +1,10 @@
-{% extends '007.html' %}
+{% extends 'main.html' %}
 
-{% block title %}IT Katas - Logs Discrets{% endblock %}
+{% block title %}IT Katas - Chiffre de Vigenère{% endblock %}
 
-{% block mission %}
+{% block body %}
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
 <p class='incremental' data-incremental-by-letter>Nous avons
   intercepté un message secret de l'ennemi. Nous savons qu'il est
   chiffré à l'aide du cryptosystème de Vigenère, mais nous n'en
@@ -52,4 +54,4 @@
 <p class='incremental' data-incremental-by-letter>Bon décodage&nbsp;!</p>
 <p class='incremental'>L</p>
 <p class='incremental'></p>
-{% endblock %}
+{% endblock body %}

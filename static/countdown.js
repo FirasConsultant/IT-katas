@@ -18,5 +18,3 @@ function countdown() {
 	setTimeout('countdown()', 1000);
     }
 }
-
-rem_time = {{ countdown.rem.days * 24 * 3600 + countdown.rem.seconds }};
