@@ -55,7 +55,7 @@ class Index(TemplateHandler):
 
 # Build the app
 kmodules = {k[0]:__import__(k[0]) for k in katas}
-kroutes = [Route(('/%s/%s' % (kata, route)).rstrip('/'),
+kroutes = [Route(('/katas/%s/%s' % (kata, route)).rstrip('/'),
                  Class, name=Class.__name__)
            for kata, module in kmodules.items()
            for route, Class in module.routes]
