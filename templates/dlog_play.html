@@ -4,11 +4,16 @@
 
 {% block body %}
 
-{% if fail %}
-  <h3 style='text-align:center'><a href='{{ uri }}'>Erreur! Essayez à nouveau</a></h3>
-{% else %}
+{% if message %}
   {{ message |safe }}
-  <h3><a href='{{ uri }}'>Passer au niveau suivant</a></h3>
+{% endif %}
+
+{% if uri %}
+{% if fail %}
+  <h3 class='incremental'><a href='{{ uri }}'>Essayez à nouveau&nbsp;!</a></h3>
+{% else %}
+  <h3 class='incremental'><a href='{{ uri }}'>Passer au niveau suivant</a></h3>
+{% endif %}
 {% endif %}
 
 {% endblock body %}

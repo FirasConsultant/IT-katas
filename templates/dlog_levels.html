@@ -1,20 +1,4 @@
-<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
-
-<p class='incremental' data-incremental-by-letter>Hellman (ce nom ne
-m'a jamais rassure...) prepare quelque chose de louche avec ses
-logarithmes discrets. Nous voulons que vous alliez le surveiller de
-pres, mais faites attention: il s'agit d'un criminel dangereux et tres
-astucieux, ne vous faites pas prendre au pieges de ses logarithmes...</p>
-<p class='incremental' data-incremental-by-letter>Pour vous preparer,
-nous avons choisi pour vous un calcul de log discret modulo un nombre
-premier de 20 bits, que voici de suite. Resolvez-le avant de
-poursuivre votre mission.</p> 
-
-<form style='text-align:center' class='incremental'>
-  <p>
-    log<sub>{{ gen }}</sub> {{ value }} = <input type='number' name='log'/> mod {{ p }}
-    <input type='submit' value='Vérifier' />
-  </p>
+{% macro hidden_fields() %}
   <input type='hidden' name='level' value='{{ level }}'/>
   {% if static %}
   <input type='hidden' name='static' />
@@ -22,24 +6,1077 @@ poursuivre votre mission.</p>
   {% if solve %}
   <input type='hidden' name='solve' />
   {% endif %}
+{% endmacro %}
+
+{% macro digicode() %}
+<form style='display:inline-block;text-align:center;'>
+  <table style='display:inline-block'>
+    {% for i in range(3) %}
+    <tr>
+      {% for j in range(3) %}
+      {% set c= 3*(2-i)+j+1 %}
+      <td><input type='button' id='pin-{{c}}' value='{{ c }}' onclick='enter({{c}})'/></td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr>
+      <td><input type='reset' value='C' style='color:red'/></td>
+      <td><input type='button' id='pin-0' value='0' onclick='enter(0)'/></td>
+      <td><input type='submit' value='#' /></td>
+    </tr>
+  </table>
+
+  <p><input id='log' type='number' name='log'/></p>
+  {{ hidden_fields() }}
+
+  <script>
+    function enter(n) {
+      v = $('#log').val();
+      $('#log').val(v + n);
+    }
+  </script>
+</form>
+{% endmacro %}
+
+
+{% set months = ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'] %}
+
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+<p class='incremental' data-incremental-by-letter>Hellman (ce nom ne
+m'a jamais rassuré...) prépare quelque chose de louche avec ses
+logarithmes discrets. Nous voulons que vous alliez le surveiller de
+près, mais faites attention: il s'agit d'un criminel dangereux et très
+astucieux, ne vous faites pas prendre au piège de ses logarithmes...</p>
+
+<p class='incremental' data-incremental-by-letter>Pour vous préparer,
+nous avons choisi pour vous un calcul de log discret modulo un nombre
+premier de 20 bits. Résolvez-le avant de poursuivre votre mission.</p>
+
+<form style='text-align:center' class='incremental'>
+  <p>
+    log<sub>{{ gen }}</sub> {{ value }} = <input type='number' name='log'/> mod {{ p }}
+    <input type='submit' value='Vérifier' />
+  </p>
+
+  {{ hidden_fields() }}
 </form>
 
 <p class='incremental'>L</p>
 <p class='incremental'></p>
 
-<!-- level -->
 
 <!-- level -->
 
-<!-- level -->
+
+<img style="float:left;margin:1em;" id="comic" src='/static/gare.svg' width="368" height="458" />
+
+<h2 class='incremental' data-incremental-by-letter>{{ today.day }} {{ months[today.month-1] }}, Gare
+  de Lyon</h2>
+
+<p class='incremental' data-incremental-by-letter>Le service de
+renseignements a intercepté cet échange entre Helmann et l'un de ses
+hommes&nbsp;:</p>
+
+<p class='incremental'><b>Hellman&nbsp;:</b> premier <i>p</i> = {{p}}, générateur <i>g</i> = {{ gen }}.</p>
+<p class='incremental'><b>Agent&nbsp;:</b> {{ value }}.</p>
+<p class='incremental'><b>Hellman&nbsp;:</b> {{ value2 }}. Gare de Lyon, Casier C78.</p>
+
+<p class='incremental' data-incremental-by-letter>Me voici devant le
+casier C78. Je suis sûr que ces fourbes ont utilisé le protocole de
+Diffie-Hellman pour convenir du code secret... Il faut que j'arrive à
+trouver ce secret avant l'agent de Hellman&nbsp;!</p>
+
+<div style='text-align:center;' class='incremental'>
+<p>Entrer code:</p>
+{{ digicode() }}
+</div>
 
 <!-- level -->
 
-<!-- level -->
+<h2 class='incremental' data-incremental-by-letter>{{ today.day }} {{ months[today.month-1] }}, Genève</h2>
+
+<p class='incremental' data-incremental-by-letter>Une clef de coffre,
+l'adresse d'une banque suisse... et encore des chiffres&nbsp;!</p>
+
+<p class='incremental' style='text-align:center' data-incremental-by-letter>
+   {{ p }}, {{ gen }}, {{ value }}
+</p>
+
+<p class='incremental' data-incremental-by-letter>Qu'est-ce que cela
+peut bien vouloir dire&nbsp;? Je sens que je suis encore bon pour
+casser un logarithme discret... espérons avoir juste&nbsp;!</p>
+
+<form style='text-align:center' class='incremental'>
+  <p><input type='submit' value='Bonjour monsieur, votre code ?' /></p>
+  <p><input type='number' name='log'/></p>
+  {{ hidden_fields() }}
+</form>
 
 <!-- level -->
 
-<!-- level -->
+<h2 class='incremental' data-incremental-by-letter>...une carte de la BGE</h2>
+
+<div style='border:thick solid green;width:50ex;min-height:15ex;margin:auto;padding:1em' class='incremental'>
+  <div style='float:right'>
+    <img src='http://www.lab-elle.org/images/uploads/contenu/donateurs/logo-VilleDeGeneve.png' 
+	 width='220' height='64' style='position:relative;right:-80px'>
+  </div>
+  Bibliothèque de Genève,<br/>
+  Promenade des Bastions 1<br/>
+  CH-1211 Genève<br/>
+  <a href='http://www.ville-ge.ch/bge/'>http://www.ville-ge.ch/bge/</a>
+
+  <div style="font-family:'Homemade Apple', cursive;font-size: 24px;position:relative;color:blue">
+    <span style='position:absolute;top:-2ex;left:22ex;
+	  transform:rotate(-30deg);-ms-transform:rotate(-30deg);-webkit-transform:rotate(-30deg);'>{{ value }}</span>
+    <span style='position:absolute;top:1ex;left:22ex;
+	  transform:rotate(-23deg);-ms-transform:rotate(-23deg);-webkit-transform:rotate(-23deg)'>{{ p }}</span>
+    <span style='position:absolute;top:2ex;left:32ex;'>{{ gen }}</span>
+  </div>
+</div>
+
+<p class='incremental' data-incremental-by-letter>Mais que veulent
+  dire encore ces nombres écrits à la main&nbsp;? Essayons d'y voir
+  clair...</p>
+
+<form style='text-align:center' class='incremental'>
+  <p><input type='submit' value='Vérifier' /></p>
+  <p><input type='number' name='log'/></p>
+  {{ hidden_fields() }}
+</form>
+
+<p class='incremental'></p>
+
+<!-- then -->
+
+<p class='incremental' data-incremental-by-letter>Hmm... {{ exp }},
+mais qu'est-ce que cela peut bien vouloir dire&nbsp;?
+...bibliothèque... entiers... 10 chiffres... j'ai une idée, ça doit
+être un code ISBN&nbsp;!</p>
+
+<p class='incremental' data-incremental-by-letter>Il y a une façon
+simple de vérifier&nbsp;: les codes ISBN utilisent un code correcteur
+d'erreurs basé sur Z/11Z, si ce nombre est un ISBN
+valide je parie ma licence double zéro que la prochaine piste va se
+trouver dans un livre...</p>
+
+<p style='padding-left:4em' class='incremental' data-incremental-by-letter>
+  {% set i = 10 %}
+  {% for d in exp|string -%}
+    {{d}}{% if i > 1 %}x{{i}} + {% endif %}
+  {%- set i = i - 1 %}
+  {% endfor %} = 0 mod 11
+</p>
+
+<p class='incremental' data-incremental-by-letter>
+  Hourra&nbsp;! Je file à la bibliothèque&nbsp;!</p>
+
 
 <!-- level -->
 
+<img style="float:right;margin:1em;" id="comic" width='460' height='524' src='/static/livre.svg' />
+
+<h2 class='incremental' data-incremental-by-letter>Euler...</h2>
+
+<p class='incremental' data-incremental-by-letter>D'un type comme
+Hellman, on ne pouvait s'attendre qu'à cela&nbsp;! Qu'a-t-il pu bien
+cacher dans ce livre&nbsp;?</p>
+
+<p class='incremental' data-incremental-by-letter>Mais voici, au dos
+de la couverture&nbsp;!  Une adresse e-mail&nbsp; {{ p }}@gmail.com,
+et encore des chiffres: {{ gen }}, {{ value }}. Cela ne peut être
+qu'une autre devinette de Hellman...</p>
+
+<style type="text/css">
+  .signin-box a:active {
+    color: #d14836;
+  }
+  .signin-box a:hover {
+    text-decoration: underline;
+  }
+  .signin-box h2 {
+    color: #222;
+    font-size: 1.54em;
+    font-weight: normal;
+    line-height: 24px;
+    margin: 0 0 .46em;
+  }
+  .signin-box p {
+    line-height: 17px;
+    margin: 0 0 1em;
+  }
+  .signin-box ol, ul {
+    list-style: none;
+    line-height: 17px;
+    margin: 0 0 1em;
+  }
+  .signin-box li {
+    margin: 0 0 .5em;
+  }
+  .signin-box strong {
+    color: #222;
+  }
+  input[type=email],
+  input[type=number],
+  input[type=password],
+  input[type=tel],
+  input[type=text],
+  input[type=url] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-block;
+    height: 29px;
+    margin: 0;
+    padding: 0 8px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+  }
+  input[type=email]:hover,
+  input[type=number]:hover,
+  input[type=password]:hover,
+  input[type=tel]:hover,
+  input[type=text]:hover,
+  input[type=url]:hover {
+    border: 1px solid #b9b9b9;
+    border-top: 1px solid #a0a0a0;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+  input[type=email]:focus,
+  input[type=number]:focus,
+  input[type=password]:focus,
+  input[type=tel]:focus,
+  input[type=text]:focus,
+  input[type=url]:focus {
+    outline: none;
+    border: 1px solid #4d90fe;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+  input[type=email][disabled=disabled],
+  input[type=number][disabled=disabled],
+  input[type=password][disabled=disabled],
+  input[type=tel][disabled=disabled],
+  input[type=text][disabled=disabled],
+  input[type=url][disabled=disabled] {
+    border: 1px solid #e5e5e5;
+    background: #f1f1f1;
+  }
+  input[type=email][disabled=disabled]:hover,
+  input[type=number][disabled=disabled]:hover,
+  input[type=password][disabled=disabled]:hover,
+  input[type=tel][disabled=disabled]:hover,
+  input[type=text][disabled=disabled]:hover,
+  input[type=url][disabled=disabled]:hover {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  input[type=email][readonly=readonly],
+  input[type=number][readonly=readonly],
+  input[type=password][readonly=readonly],
+  input[type=text][readonly=readonly],
+  input[type=url][readonly=readonly] {
+    border: 1px solid #d9d9d9;
+  }
+  input[type=email][readonly=readonly]:hover,
+  input[type=number][readonly=readonly]:hover,
+  input[type=password][readonly=readonly]:hover,
+  input[type=text][readonly=readonly]:hover,
+  input[type=url][readonly=readonly]:hover,
+  input[type=email][readonly=readonly]:focus,
+  input[type=number][readonly=readonly]:focus,
+  input[type=password][readonly=readonly]:focus,
+  input[type=text][readonly=readonly]:focus,
+  input[type=url][readonly=readonly]:focus {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  input[type=checkbox].form-error,
+  input[type=email].form-error,
+  input[type=number].form-error,
+  input[type=password].form-error,
+  input[type=text].form-error,
+  input[type=tel].form-error,
+  input[type=url].form-error {
+    border: 1px solid #dd4b39;
+  }
+  input[type=checkbox],
+  input[type=radio] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+  }
+  input[type=checkbox]:active,
+  input[type=radio]:active {
+    border-color: #c6c6c6;
+    background: #ebebeb;
+  }
+  input[type=checkbox]:hover {
+    border-color: #c6c6c6;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+  }
+  input[type=radio] {
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    width: 15px;
+    height: 15px;
+  }
+  input[type=checkbox]:checked,
+  input[type=radio]:checked {
+    background: #fff;
+  }
+  input[type=radio]:checked::after {
+    content: '';
+    display: block;
+    position: relative;
+    top: 3px;
+    left: 3px;
+    width: 7px;
+    height: 7px;
+    background: #666;
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+  }
+  input[type=checkbox]:checked::after {
+    content: url(//ssl.gstatic.com/ui/v1/menu/checkmark.png);
+    display: block;
+    position: absolute;
+    top: -6px;
+    left: -5px;
+  }
+  input[type=checkbox]:focus {
+    outline: none;
+    border-color:#4d90fe;
+  }
+  .gaia-country-menu-item-flag, .gaia-country-menu-item-noflag {
+    width: 16px;
+    height: 11px;
+    margin-right: 1em;
+  }
+  .gaia-country-menu-item-flag {
+    background: no-repeat url(//ssl.gstatic.com/accounts/ui/flags2.gif) 0 0;
+    overflow: hidden;
+  }
+  .g-button {
+    display: inline-block;
+    min-width: 46px;
+    text-align: center;
+    color: #444;
+    font-size: 11px;
+    font-weight: bold;
+    height: 27px;
+    padding: 0 8px;
+    line-height: 27px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-transition: all 0.218s;
+    -moz-transition: all 0.218s;
+    -ms-transition: all 0.218s;
+    -o-transition: all 0.218s;
+    transition: all 0.218s;
+    border: 1px solid #dcdcdc;
+    background-color: #f5f5f5;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f5f5f5),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -ms-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+  *+html .g-button {
+    min-width: 70px;
+  }
+  button.g-button,
+    input[type=submit].g-button {
+    height: 29px;
+    line-height: 29px;
+    vertical-align: bottom;
+    margin: 0;
+  }
+  *+html button.g-button,
+  *+html input[type=submit].g-button {
+    overflow: visible;
+  }
+  .g-button:hover {
+    border: 1px solid #c6c6c6;
+    color: #333;
+    text-decoration: none;
+    -webkit-transition: all 0.0s;
+    -moz-transition: all 0.0s;
+    -ms-transition: all 0.0s;
+    -o-transition: all 0.0s;
+    transition: all 0.0s;
+    background-color: #f8f8f8;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f8f8f8),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+  .g-button:active {
+    background-color: #f6f6f6;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f6f6f6),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#f6f6f6,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#f6f6f6,#f1f1f1);
+    background-image: -ms-linear-gradient(top,#f6f6f6,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f6f6f6,#f1f1f1);
+    background-image: linear-gradient(top,#f6f6f6,#f1f1f1);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .g-button:visited {
+    color: #666;
+  }
+  .g-button-submit {
+    border: 1px solid #3079ed;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.1);
+    background-color: #4d90fe;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#4d90fe),to(#4787ed));
+    background-image: -webkit-linear-gradient(top,#4d90fe,#4787ed);
+    background-image: -moz-linear-gradient(top,#4d90fe,#4787ed);
+    background-image: -ms-linear-gradient(top,#4d90fe,#4787ed);
+    background-image: -o-linear-gradient(top,#4d90fe,#4787ed);
+    background-image: linear-gradient(top,#4d90fe,#4787ed);
+  }
+  .g-button-submit:hover {
+    border: 1px solid #2f5bb7;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.3);
+    background-color: #357ae8;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#4d90fe),to(#357ae8));
+    background-image: -webkit-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -moz-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -ms-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -o-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: linear-gradient(top,#4d90fe,#357ae8);
+  }
+  .g-button-submit:active {
+    background-color: #357ae8;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#4d90fe),to(#357ae8));
+    background-image: -webkit-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -moz-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -ms-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: -o-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: linear-gradient(top,#4d90fe,#357ae8);
+    -webkit-box-shadow: inset 0 1px 2px rgb	a(0,0,0,0.3);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .g-button-share {
+    border: 1px solid #29691d;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.1);
+    background-color: #3d9400;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#3d9400),to(#398a00));
+    background-image: -webkit-linear-gradient(top,#3d9400,#398a00);
+    background-image: -moz-linear-gradient(top,#3d9400,#398a00);
+    background-image: -ms-linear-gradient(top,#3d9400,#398a00);
+    background-image: -o-linear-gradient(top,#3d9400,#398a00);
+    background-image: linear-gradient(top,#3d9400,#398a00);
+  }
+  .g-button-share:hover {
+    border: 1px solid #2d6200;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.3);
+    background-color: #368200;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#3d9400),to(#368200));
+    background-image: -webkit-linear-gradient(top,#3d9400,#368200);
+    background-image: -moz-linear-gradient(top,#3d9400,#368200);
+    background-image: -ms-linear-gradient(top,#3d9400,#368200);
+    background-image: -o-linear-gradient(top,#3d9400,#368200);
+    background-image: linear-gradient(top,#3d9400,#368200);
+  }
+  .g-button-share:active {
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .g-button-red {
+    border: 1px solid transparent;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    background-color: #d14836;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#dd4b39),to(#d14836));
+    background-image: -webkit-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -moz-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -ms-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -o-linear-gradient(top,#dd4b39,#d14836);
+    background-image: linear-gradient(top,#dd4b39,#d14836);
+  }
+  .g-button-red:hover {
+    border: 1px solid #b0281a;
+    color: #fff;
+    text-shadow: 0 1px rgba(0,0,0,0.3);
+    background-color: #c53727;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#dd4b39),to(#c53727));
+    background-image: -webkit-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -moz-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -ms-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -o-linear-gradient(top,#dd4b39,#c53727);
+    background-image: linear-gradient(top,#dd4b39,#c53727);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -o-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  }
+  .g-button-red:active {
+    border: 1px solid #992a1b;
+    background-color: #b0281a;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#dd4b39),to(#b0281a));
+    background-image: -webkit-linear-gradient(top,#dd4b39,#b0281a);
+    background-image: -moz-linear-gradient(top,#dd4b39,#b0281a);
+    background-image: -ms-linear-gradient(top,#dd4b39,#b0281a);
+    background-image: -o-linear-gradient(top,#dd4b39,#b0281a);
+    background-image: linear-gradient(top,#dd4b39,#b0281a);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    color: #fff
+  }
+  .g-button-white {
+    border: 1px solid #dcdcdc;
+    color: #666;
+    background: #fff;
+  }
+  .g-button-white:hover {
+    border: 1px solid #c6c6c6;
+    color: #333;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+  .g-button-white:active {
+    background: #fff;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .g-button-red:visited,
+  .g-button-share:visited,
+  .g-button-submit:visited {
+  color: #fff;
+  }
+  .g-button-submit:focus,
+  .g-button-share:focus,
+  .g-button-red:focus {
+  -webkit-box-shadow: inset 0 0 0 1px #fff;
+  -moz-box-shadow: inset 0 0 0 1px #fff;
+  box-shadow: inset 0 0 0 1px #fff;
+  }
+  .g-button-share:focus {
+  border-color: #29691d;
+  }
+  .g-button-red:focus {
+  border-color: #d14836;
+  }
+  .g-button-submit:focus:hover,
+  .g-button-share:focus:hover,
+  .g-button-red:focus:hover {
+  -webkit-box-shadow: inset 0 0 0 1px #fff, 0 1px 1px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 0 0 1px #fff, 0 1px 1px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 0 1px #fff, 0 1px 1px rgba(0,0,0,0.1);
+  }
+  .g-button.selected {
+  background-color: #eee;
+  background-image: -webkit-gradient(linear,left top,left bottom,from(#eee),to(#e0e0e0));
+  background-image: -webkit-linear-gradient(top,#eee,#e0e0e0);
+  background-image: -moz-linear-gradient(top,#eee,#e0e0e0);
+  background-image: -ms-linear-gradient(top,#eee,#e0e0e0);
+  background-image: -o-linear-gradient(top,#eee,#e0e0e0);
+  background-image: linear-gradient(top,#eee,#e0e0e0);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  color: #333;
+  }
+  .g-button img {
+  display: inline-block;
+  margin: -3px 0 0;
+  opacity: .55;
+  filter: alpha(opacity=55);
+  vertical-align: middle;
+  pointer-events: none;
+  }
+  *+html .g-button img {
+  margin: 4px 0 0;
+  }
+  .g-button:hover img {
+  opacity: .72;
+  filter: alpha(opacity=72);
+  }
+  .g-button:active img {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  }
+  .g-button.disabled img {
+  opacity: .5;
+  filter: alpha(opacity=50);
+  }
+  .g-button.disabled,
+  .g-button.disabled:hover,
+  .g-button.disabled:active,
+  .g-button-submit.disabled,
+  .g-button-submit.disabled:hover,
+  .g-button-submit.disabled:active,
+  .g-button-share.disabled,
+  .g-button-share.disabled:hover,
+  .g-button-share.disabled:active,
+  .g-button-red.disabled,
+  .g-button-red.disabled:hover,
+  .g-button-red.disabled:active,
+  input[type=submit][disabled].g-button {
+  background-color: none;
+  opacity: .5;
+  filter: alpha(opacity=50);
+  cursor: default;
+  pointer-events: none;
+  }
+  .signin-box,
+  .accountchooser-box {
+  margin: 12px 120px 0;
+  padding: 20px 25px 15px;
+  background: #f1f1f1;
+  border: 1px solid #e5e5e5;
+  }
+  .signin-box h2 {
+  font-size: 16px;
+  line-height: 17px;
+  height: 16px;
+  margin: 0 0 1.2em;
+  }
+  .signin-box h2 strong {
+  display: inline-block;
+  right: 0;
+  top: 1px;
+  height: 19px;
+  width: 52px;
+  background: transparent url(//ssl.gstatic.com/accounts/ui/google-signin-flat.png) no-repeat;
+  }
+  @media only screen and (-webkit-device-pixel-ratio: 2){
+  .signin-box h2 strong {
+  background: transparent url(//ssl.gstatic.com/accounts/ui/google-signin-flat_2x.png) no-repeat;
+  background-size: 52px 19px;
+  }
+  }
+  .signin-box div {
+  margin: 0 0 1.5em;
+  }
+  .signin-box label {
+  display: block;
+  }
+  .signin-box input[type=email],
+  .signin-box input[type=text],
+  .signin-box input[type=password] {
+  width: 100%;
+  height: 32px;
+  font-size: 15px;
+  direction: ltr;
+  }
+  .signin-box .email-label,
+  .signin-box .passwd-label {
+  font-weight: bold;
+  margin: 0 0 .5em;
+  display: block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  }
+  .signin-box .reauth {
+  display: inline-block;
+  font-size: 15px;
+  height: 29px;
+  line-height: 29px;
+  margin: 0;
+  }
+  .signin-box label.remember {
+  display: inline-block;
+  vertical-align: top;
+  margin: 9px 0 0;
+  }
+  .signin-box .remember-label {
+  font-weight: normal;
+  color: #666;
+  line-height: 0;
+  padding: 0 0 0 .4em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  }
+  .signin-box input[type=submit] {
+  margin: 0 1.5em 1.2em 0;
+  height: 32px;
+  font-size: 13px;
+  }
+  .signin-box ul {
+  margin: 0;
+  }
+  .signin-box .training-msg {
+  padding: .5em 8px;
+  background: #f9edbe;
+  }
+  .signin-box .training-msg p {
+  margin: 0 0 .5em;
+  }
+</style>
+
+<div class="signin-box incremental" style='width:20em'>
+  <h2>Sign in <strong></strong></h2>
+  <form novalidate="" id="gaia_loginform">
+    <div class="email-div">
+      <label for="Email"><strong class="email-label">Username</strong></label>
+      <input spellcheck="false" id="Email" value="{{ p }}@gmail.com" type="email">
+    </div>
+    <div class="passwd-div">
+      <label for="Passwd"><strong class="passwd-label">Password</strong></label>
+      <input name="log" id="Passwd" type="password">
+    </div>
+    <input class="g-button g-button-submit" id="signIn" value="Sign in" type="submit">
+    <label class="remember" >
+      <input id="PersistentCookie" value="yes" checked="checked" type="checkbox">
+      <strong class="remember-label">
+	Stay signed in
+      </strong>
+    </label>
+    {{ hidden_fields() }}
+  </form>
+  <ul>
+    <li>
+      <a id="link-forgot-passwd" href="#">
+	Can't access your account?
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+<!-- level -->
+
+<h2 class='incremental' data-incremental-by-letter>From: Hellman</h2>
+<h2 class='incremental' data-incremental-by-letter>To: Diffie</h2>
+
+<p class='incremental' data-incremental-by-letter>Cher Diffie,</p>
+
+<p class='incremental' data-incremental-by-letter>Le projet Néper
+   procède à merveille. Rejoignez-moi dans mon refuge souterrain pour
+   la phase finale du plan. Les coordonnées du refuge sont 48N, 56O,
+   avec les décimales encodées dans ce log discret&nbsp;:</p>
+
+<form style='text-align:center' class='incremental'>
+  <p>
+    log<sub>{{ gen }}</sub> {{ value }} = <input type='number' name='log'/> mod {{ p }}
+    <input type='submit' value='Vérifier' />
+  </p>
+
+  {{ hidden_fields() }}
+</form>
+
+<p class='incremental' data-incremental-by-letter>Logarithmiquement,</p>
+
+<p class='incremental' data-incremental-by-letter>Hellman</p>
+<p class='incremental' data-incremental-by-letter></p>
+
+<!-- then -->
+
+{% set lat = (exp/10**12)|round(6,'floor')|string|replace('0.','') %}
+{% set lon = (exp/10**6)|string|replace((exp/10**6)|int|string + '.','') %}
+{% set href = 'https://maps.google.com/maps?q=48.%s,-56.%s&output=embed&t=h&z=7'|format(lat,lon)|escape %}
+
+<p class='incremental' data-incremental-by-letter>Une latitude et une
+longitude, hein&nbsp;? Ce nombre premier faisait environ 12 chiffres
+décimaux. Des coordonnées terrestres ont besoin de 6 chiffres
+décimaux pour être assez précises...</p>
+
+<p class='incremental' data-incremental-by-letter>Je parie que les
+coordonnées exactes sont: 48.{{lat}}N, 56.{{lon}}O. Où est-ce
+que cela peut être&nbsp;?</p>
+
+<div style='text-align:center'>
+<iframe class='incremental' width="425"
+	height="350" frameborder="0" scrolling="no" marginheight="0"
+	marginwidth="0" src="{{href}}"></iframe>
+</div>
+
+<p class='incremental' data-incremental-by-letter>Terre-Neuve&nbsp;!
+  Quel endroit idéal pour une cache&nbsp;! Je pars à
+  l'instant&nbsp;!</p>
+
+
+<!-- level -->
+
+
+<h2 class='incremental' data-incremental-by-letter>{{ today.day }} {{
+  months[today.month-1] }}, Terre-Neuve</h2>
+
+<p class='incremental' data-incremental-by-letter>Ce refuge est
+drôlement bien sécurisé. Même une porte blindée à code,
+maintenant. Heureusement les renseignements ont intercepté une autre
+communication de Hellman. Il me faut juste résoudre un autre
+logarithme&nbsp; log<sub>{{ gen }}</sub> {{ value }} mod {{ p }}.</p>
+
+<div class='incremental' style='text-align:center'>
+  {{ digicode() }}
+</div>
+
+<p class='incremental' data-incremental-by-letter>Heureusement que
+  j'ai toujours une calculette programmable sur moi&nbsp;!</p>
+
+<!-- then -->
+
+<img style="float:left;margin:1em;" id="comic" width='560' height='600' src='/static/mechant.svg' />
+
+<h2 class='incremental' data-incremental-by-letter>Agent {{ realname }}...</h2>
+
+<p class='incremental' data-incremental-by-letter>Quel plaisir de vous
+  voir ici. Nous vous attendions, savez-vous&nbps;?</p>
+
+<h1 class='incremental' style='text-align:center'>Capturez-le&nbsp;!!!</h1>
+
+<p class='incremental' data-incremental-by-letter>Très bien, agent {{
+  realname }}... soyez sage, voulez-vous&nbsp;? Et maintenant que je
+  me suis débarrassé de ces trouble-fête des services secrets, je peux
+  finaliser mon plan&nbsp;!</p>
+
+<p class='incremental' data-incremental-by-letter>Grâce à mon
+  invention, la bombe E, dans
+
+  {% if countdown.rem.days > 0 %}
+    {{ countdown.rem.days }} jours
+  {% else %}
+    quelques heures
+  {% endif %}
+
+  le monde changera son visage pour toujours&nbsp;! Des millions de
+  logarithmes discrets entrerons dans la tête des gens, leurs cerveaux
+  se consumeront sous le poids de tous ces calculs, les faibles ne
+  tiendront que quelques heures avant de devenir fous. Et bientôt, le
+  monde sera débarrassé de cette race inférieure qu'est l'homme. C'est
+  du Darwinisme pur et simple&nbsp; seuls les meilleurs survivront,
+  une nouvelle race d'hommes aux capacités calculatoires immenses sera
+  engendrée&nbsp;! C'est l'aube de...</p>
+
+<h2 class='incremental' data-incremental-by-letter style='text-align:center'>l'Homo Logarithmus&nbsp!</h2>
+
+<p>
+  <span class='incremental' data-incremental-by-letter style='font-size:100%'>Muahahaha&nbsp;!</span>
+  <span class='incremental' data-incremental-by-letter style='font-size:140%'>Ahahaha&nbsp;!</span>
+  <span class='incremental' data-incremental-by-letter style='font-size:180%'>Ha ah ahahaah&nbsp;!</span>
+  <span class='incremental' data-incremental-by-letter style='font-size:250%'>Ha Ha Ha HA&nbsp;!</span>
+  <span class='incremental' data-incremental-by-letter style='font-size:400%'>HAHAHAHAAH&nbsp;!</span>
+  <span class='incremental' data-incremental-by-letter style='font-size:60%'>...cough, cough</span>
+</p>
+
+<h2 class='incremental' data-incremental-by-letter>Enfermez-le dans le souterain&nbsp;!</h2>
+
+<!-- level -->
+
+<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='/static/heroine.svg' />
+
+{% set her = '25000001' %}
+
+<h2 class='incremental' data-incremental-by-letter>Agent {{ her }}&nbsp;!</h2>
+
+<p class='incremental' data-incremental-by-letter>{{ agent }}&nbsp;: Que fais tu ici&nbsp;?</p>
+
+<p class='incremental' data-incremental-by-letter>{{ her }}&nbsp;:
+Croyais-tu qu'on te laisserait partir en mission sans
+couverture&nbsp;? J'ai infiltré la base de Hellman depuis 4 semaines,
+et je suis ici pour te sortir de cette situation embarrassante.</p>
+
+<p class='incremental' data-incremental-by-letter>{{ agent }}&nbsp;:
+Vite il n'y a pas une minute a perdre, nous devons désactiver la bombe
+E&nbsp;!</p>
+
+<p class='incremental' data-incremental-by-letter>{{ her }}&nbsp;: Et
+tu comptes t'y prendre comment depuis ton cachot&nbsp;? Tu as de la
+chance que j'aie pu récupérer les codes de déblocage. Je vais les
+rentrer sur le clavier&nbsp;: {{ gen }}-{{ p }}-{{ value }}.</p>
+
+<p class='incremental' data-incremental-by-letter>{{ agent }}&nbsp;:
+  NOON&nbsp;! Attends, c'est sans doutes une autre astuce de Hellman,
+  si tu rentres un mauvais code l'alarme va sonner. Je suis persuadé
+  que pour trouver le vrai code nous devons calculer un logarithme
+  discret.</p>
+
+<p class='incremental' data-incremental-by-letter>{{ her }}&nbsp;: Ok,
+  Mr scientifique. Après tout, c'est ta peau qui est en jeu. As-tu
+  toujours ta calculette&nbsp;? J'attends ton logarithme...</p>
+
+<div class='incremental' style='text-align:center'>
+  {{ digicode() }}
+</div>
+
+<p class='incremental' data-incremental-by-letter></p>
+
+
+<!-- level -->
+
+<style>
+html, body {
+
+  -moz-animation-duration: 3s;
+  -moz-animation-name: alert;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: ease-in-out;
+
+  -webkit-animation-duration: 3s;
+  -webkit-animation-name: alert;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in-out;
+}
+
+@-moz-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+
+@-webkit-keyframes alert {
+
+@-webkit-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+</style>
+
+<h2 class='incremental' data-incremental-by-letter>Vite&nbsp;!</h2>
+
+<p class='incremental' data-incremental-by-letter>– Nous devons trouver
+  le code  de désengagement de la bombe E.</p>
+
+<p class='incremental' data-incremental-by-letter>– On a de la chance,
+regarde ce que j'ai trouver dans les projets de la bombe E&nbsp;:</p>
+
+<p class='incremental' data-incremental-by-letter
+style='text-align:center'>{{ value }}, {{ p }}, {{ gen }}</p>
+
+<p class='incremental' data-incremental-by-letter>– Encore un
+logarithme, on ne va jamais y arriver à temps&nbsp;!</p>
+
+<p class='incremental' data-incremental-by-letter>– Mais, si,
+essayons avec un autre algorithme...</p>
+
+<div class='incremental' style='text-align:center'>
+  {{ digicode() }}
+</div>
+
+<p class='incremental' data-incremental-by-letter></p>
+
+<!-- fail -->
+
+<style>
+#gameover {
+  visibility: hidden;
+  font-size: 400%;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 10em;
+  height: 1em;
+  margin-left: -5em;
+  margin-top: -0.5em;
+  z-index : 4;
+}
+</style>
+
+<h1 id='gameover' data-incremental-by-letter >Game Over</h1>
+
+<script>
+  var frame = $('<div id="frame"></div>');
+  frame.css('position', 'fixed');
+  frame.css('left', '0');
+  frame.css('top', '0');
+  frame.css('width', '100%');
+  frame.css('height', '100%');
+  frame.css('zIndex', '3');
+  frame.css('overflow', 'hidden');
+  var boom = $('<img id="boom">');
+  $(function() { boom.attr('src', '/static/explosion.png') });
+  boom.css('position', 'absolute');
+  boom.css('width', '100%');
+  boom.css('left', '0%');
+  boom.css('height', '4300%');
+  boom.css('top', '0%');
+  frame.append(boom);
+
+function explode() {
+  $('body').append(frame);
+  var f = 0;
+  function next_frame() {
+    boom.css('top', '-' + f + '00%');
+    f++;
+    if (f < 43)
+      setTimeout(next_frame, 120);
+    else {
+      try {
+        incremental.start(['gameover']);
+      } catch(e) {
+        $('#gameover').css('visibility', 'visible');
+      }
+      setTimeout(function() { window.location.href = '?', 4000 });
+    }
+  }
+  next_frame();
+}
+
+$(explode);
+</script>
+
+<!-- then -->
+
+<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='/static/heroine.svg' />
+<img style="float:left;margin:1em;" id="comic" width='360' height='907' src='/static/heros.svg' />
+
+<h2 class='incremental' data-incremental-by-letter>Congratulations, agents&nbsp;</h2>
+
+<p class='incremental' data-incremental-by-letter>Vous avez
+brillamment arrêté Hellman et son plan maléfique. L'organisation, et
+la terre entière vous sont reconnaissants&nbsp;!</p>
+
+<p class='incremental' data-incremental-by-letter>L</p>
+<p class='incremental' data-incremental-by-letter></p>
