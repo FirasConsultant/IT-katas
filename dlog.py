@@ -39,7 +39,7 @@ def init(meth):
         if self._solve:
             self._max_level = len(levels) - 1
         else:
-            self._max_level = self._player.level
+            self._max_level = min(self._player.level, len(levels) - 1)
 
         try:
             self._level = int(self.request.get('level'))
