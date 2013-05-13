@@ -5,17 +5,20 @@ from mission import mission
 import logging
 from google.appengine.ext import db
 from datetime import datetime
+from base64 import b64encode
+
+imgpath = 'include/'
 
 levels = [
-    (20, 1048583, 5),
-    (25, 33554467, 2),
-    (30, 1073741827, 2),
-    (32, 4294967311, 3),
-    (35, 34359738421, 2),
-    (40, 1099511627791, 3),
-    (50, 1125899906842679, 11),
-    (60, 1152921504606847009, 13),
-    (70, 1180591620717411303449, 3),
+    (20, 1048583, 5, []),
+    (25, 33554467, 2, ['gare.svg']),
+    (30, 1073741827, 2, []),
+    (32, 4294967311, 3, []),
+    (35, 34359738421, 2, ['livre.svg']),
+    (40, 1099511627791, 3, []),
+    (50, 1125899906842679, 11, ['mechant.svg']),
+    (60, 1152921504606847009, 13, ['heroine.svg']),
+    (70, 1180591620717411303449, 3, ['heroine.svg', 'heros.svg']),
 ]
 
 # Models
@@ -44,7 +47,10 @@ def init(meth):
             self._level = self._max_level
         self._level = max(min(self._level, self._max_level), 0)
 
-        self._bits, self._p, self._g = levels[self._level]
+        self._bits, self._p, self._g, self._images = levels[self._level]
+
+        self._images = [b64encode(open(imgpath + x).read()) for x in self._images]
+        
         random = self.session.permarandom(self._agent_at, self._level)
         if self._level == 3:
             check = 10
@@ -80,6 +86,7 @@ class DLog(TH):
             agent=self._agent,
             realname=self.session['user'].friendly(),
             level=self._level,
+            images=self._images,
             p=self._p,
             gen=self._g,
             exp=self._exp,

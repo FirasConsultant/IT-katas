@@ -38,6 +38,9 @@
 </form>
 {% endmacro %}
 
+{% macro datauri(uri) -%}
+data:image/svg+xml;base64,{{ uri }}
+{%- endmacro %}
 
 {% set months = ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'] %}
 
@@ -69,7 +72,7 @@ premier de 20 bits. Résolvez-le avant de poursuivre votre mission.</p>
 <!-- level -->
 
 
-<img style="float:left;margin:1em;" id="comic" src='/static/gare.svg' width="368" height="458" />
+<img style="float:left;margin:1em;" id="comic" src='{{ datauri(images[0]) }}' width="368" height="458" />
 
 <h2 class='incremental' data-incremental-by-letter>{{ today.day }} {{ months[today.month-1] }}, Gare
   de Lyon</h2>
@@ -175,7 +178,7 @@ trouver dans un livre...</p>
 
 <!-- level -->
 
-<img style="float:right;margin:1em;" id="comic" width='460' height='524' src='/static/livre.svg' />
+<img style="float:right;margin:1em;" id="comic" width='460' height='524' src='{{ datauri(images[0]) }}' />
 
 <h2 class='incremental' data-incremental-by-letter>Euler...</h2>
 
@@ -868,7 +871,7 @@ logarithme&nbsp;:</p>
 
 <!-- then -->
 
-<img style="float:left;margin:1em;" id="comic" width='560' height='600' src='/static/mechant.svg' />
+<img style="float:left;margin:1em;" id="comic" width='560' height='600' src='{{ datauri(images[0]) }}' />
 
 <h2 class='incremental' data-incremental-by-letter>Agent {{ realname }}...</h2>
 
@@ -915,7 +918,7 @@ logarithme&nbsp;:</p>
 
 <!-- level -->
 
-<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='/static/heroine.svg' />
+<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='{{ datauri(images[0]) }}' />
 
 {% set her = '25000001' %}
 
@@ -1071,8 +1074,8 @@ $(explode);
 
 <!-- then -->
 
-<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='/static/heroine.svg' />
-<img style="float:left;margin:1em;" id="comic" width='360' height='907' src='/static/heros.svg' />
+<img style="float:right;margin:1em;" id="comic" width='321' height='907' src='{{ datauri(images[0]) }}' />
+<img style="float:left;margin:1em;" id="comic" width='360' height='907' src='{{ datauri(images[1]) }}' />
 
 <h2 class='incremental' data-incremental-by-letter>Congratulations, agents&nbsp;</h2>
 
