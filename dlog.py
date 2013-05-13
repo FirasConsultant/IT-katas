@@ -2,7 +2,6 @@ from main import TemplateHandler as TH
 from webapp2 import RequestHandler, abort
 from almost_secure_cookie import Session
 from mission import mission
-import random
 import logging
 from google.appengine.ext import db
 from datetime import datetime
@@ -46,7 +45,7 @@ def init(meth):
         self._level = max(min(self._level, self._max_level), 0)
 
         self._bits, self._p, self._g = levels[self._level]
-        random.seed(self._agent_at + str(self._level))
+        random = self.session.permarandom(self._agent_at, self._level)
         if self._level == 3:
             check = 10
             while check == 10:

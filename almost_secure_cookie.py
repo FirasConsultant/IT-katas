@@ -7,8 +7,10 @@ import json
 import time
 import webapp2
 import os
+import random
 
 API_VERSION = os.environ.get('CURRENT_VERSION_ID').split('.')[0]
+
 
 class SessionError(Exception):
     pass
@@ -41,6 +43,12 @@ class Session(dict):
                                        self._make_cookie(),
                                        max_age=self._max_age)
 
+    def permarandom(self, *args):
+        '''
+        Instantiates a permanent random number genarator, seeded with
+        the session secret and optional arguments.
+        '''
+        return random.Random((self._secret,) + args)
 
     def __setitem__(self, key, val):
         if not isinstance(key, str):
@@ -87,3 +95,4 @@ def with_session(meth):
         self.session.send_cookie()
         return res
     return wrapper
+

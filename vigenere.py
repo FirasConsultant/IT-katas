@@ -1,7 +1,6 @@
 from main import TemplateHandler as TH
 from webapp2 import RequestHandler
 from mission import mission
-import random
 from itertools import *
 
 def init(meth):
@@ -12,7 +11,7 @@ def init(meth):
         with open('misc/jangada.txt') as f:
             self._text = ''.join(f.readlines())
 
-            self._key = _gen_key(self._agent_at)
+            self._key = _gen_key(self.session.permarandom(self._agent_at))
             self._ciph = _do_vig(self._text, self._key)
 
         return meth(self, *args, **kw)
@@ -47,8 +46,7 @@ class VigenereDownload(RequestHandler):
 routes = [('', Vigenere),
           ('download', VigenereDownload)]
 
-def _gen_key(salt):
-    random.seed(salt)
+def _gen_key(random):
     length = random.randrange(10, 20)
     return [random.randrange(26) for i in range(length)]
 
