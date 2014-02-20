@@ -60,7 +60,7 @@ class CASLogin(RequestHandler):
     @staticmethod
     def _get_urls(hndl, redirect, path=None):
         cas_host = hndl.app.config['cas_host']
-        service = hndl.app.config.get('cas_service') or hndl.req.host_url
+        service = hndl.app.config.get('cas_service') or hndl.request.host_url
         service += hndl.uri_for(redirect, path=path)
         return (cas_host, urllib.quote(service, ''))
 
