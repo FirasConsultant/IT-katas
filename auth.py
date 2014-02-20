@@ -25,7 +25,8 @@ class User(dict):
 
         self.name = self['name']
         self.domain = self.get('domain')
-        self.is_boss = (self.__repr__()
+        self.is_boss = (gooser.is_current_user_admin() or
+                        self.__repr__()
                         in webapp2.get_app().config['bosses'])
 
     def __str__(self):
