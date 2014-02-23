@@ -1,0 +1,55 @@
+{% extends 'main.html' %}
+
+{% block title %}IT Katas - Compression LZ78{% endblock %}
+
+{% block body %}
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+<p class='incremental' data-incremental-by-letter>Et bienvenue dans
+l'Organisation. Lorsque vous êtes en mission le silence est d'or...  à
+défaut de pouvoir se taire, la compression est une bonne chose.</p>
+
+<p class='incremental' data-incremental-by-letter>C'est pour cela que
+nous allons utiliser l'algorithme de compression LZ78 pour compresser
+tous les messages qui vous seront destinés.</p>
+
+<p class='incremental' data-incremental-by-letter>Voici un premier
+message compressé, en provenance de nos services administratifs. Vous
+pouvez le télécharger <a class='incremental'
+data-incremental-by-letter
+href='{{uri_dnld}}'>ici</a><span class='incremental'>.</p>
+
+{% if not countdown.expired %}
+<p><span  class='incremental' data-incremental-by-letter >
+    Vous avez </span>{% include 'countdown.html' %}
+  <span class='incremental' data-incremental-by-letter >
+    pour prendre connaissance de vos ordres, faute de quoi vous serez
+    déclassé à agent de circulation&nbsp;!</span>
+</p>
+{% else %}
+<p class='incremental' data-incremental-by-letter >
+  Le temps à votre disposition pour
+  lire le message est arrivé à échéance, en conséquence vous allez être
+  éliminé.</p>
+{% endif %}
+
+
+{% if unzip %}
+<p>Hi, boss.</p>
+
+<p>Original size: {{ size[0] }}. Compressed size: {{ size[1] }}. The texts are{% if unzip != text %}n't{% endif %} the same.</p>
+
+<p>Here's the text:</p>
+
+<pre>{{ text }}</pre>
+
+<p>Here's the same zipped and unzipped:</p>
+
+<pre>{{ unzip }}</pre>
+
+{% endif %}
+
+<p class='incremental' data-incremental-by-letter>Bonne décompression !</p>
+<p class='incremental'>L</p>
+<p class='incremental'></p>
+{% endblock body %}

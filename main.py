@@ -16,6 +16,7 @@ from auth import CASLogin, GoogleLogin, Logout, loggedin
 katas = [
     ('vigenere', u'Cryptanalyse du chiffre de Vigenère'),
     ('dlog', u'Calcul de logarithmes discrets modulo un nombre premier'),
+    ('lz78', u'Compression Lempel-Ziv 78'),
     ]
 
 
