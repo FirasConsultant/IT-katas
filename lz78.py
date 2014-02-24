@@ -26,7 +26,7 @@ def init(meth):
 
     
 class LZ78(TH):
-    @mission(2014, 3, 6, 4)
+    @mission(2014, 3, 10, 4)
     @init
     def get(self):
         self.cnr('lz78.html',
