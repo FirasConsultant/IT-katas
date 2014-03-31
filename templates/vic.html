@@ -1,0 +1,71 @@
+{% extends 'main.html' %}
+
+{% block title %}IT Katas - Chiffre VIC{% endblock %}
+
+{% block body %}
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+<p class='incremental' data-incremental-by-letter >L'organisation a un
+message secret pour vous, chiffré avec le cryptosystème VIC.</p>
+
+<p class='incremental' data-incremental-by-letter >Voici votre
+    échiquier à diffusion</p>
+
+<div class='incremental'><table>
+  <tr>
+    <td></td>
+    {% for i in range(10) %}
+    <td>{{ i }}</td>
+    {% endfor %}
+  </tr>
+  {% for l, cs in board.iteritems() %}
+  <tr>
+    <td> {{ l }} </td>
+    {% for c in cs %}
+    <th>{{ c }}</th>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table></div>
+
+<p class='incremental' data-incremental-by-letter >Votre clef secrète
+est : {{ vig_key }}</p>
+
+{% if not countdown.expired %}
+<p><span  class='incremental' data-incremental-by-letter >
+    Vous avez </span>{% include 'countdown.html' %}
+  <span class='incremental' data-incremental-by-letter >
+    pour décrypter le message !</span>
+</p>
+{% else %}
+<p class='incremental' data-incremental-by-letter >
+  Le temps à votre disposition pour
+  décrypter le message est arrivé à échéance, en conséquence vous allez être
+  éliminé.</p>
+{% endif %}
+
+<p>
+  <span class='incremental' data-incremental-by-letter>Voici le
+    message. Pour votre confort, vous pouvez aussi le télécharger en
+    cliquant</span> <a class='incremental' data-incremental-by-letter
+    href='{{uri_dnld}}'>ici</a><span class='incremental'>.</span>
+</p>
+
+<p class='nosp incremental' data-incremental-by-letter
+data-incremental-speed=5> {{ ciphertext }} </p>
+
+{% if decrypt %}
+<p>Hi, boss. Here's the original</p>
+
+<p>{{ cleartext }}</p>
+
+<p>And here's the decryption</p>
+<p class='nosp'>{{ deciphertext }}</p>
+{% endif %}
+
+<p class='incremental' data-incremental-by-letter>Bon
+déchiffrement&nbsp;!</p>
+<p class='incremental'>L</p>
+<p class='incremental'></p>
+
+{% endblock body %}

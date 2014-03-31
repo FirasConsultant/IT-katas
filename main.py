@@ -17,6 +17,7 @@ katas = [
     ('vigenere', u'Cryptanalyse du chiffre de Vigenère'),
     ('dlog', u'Calcul de logarithmes discrets modulo un nombre premier'),
     ('lz78', u'Compression Lempel-Ziv 78'),
+    ('vic', u'Chiffre VIC'),
     ]
 
 
