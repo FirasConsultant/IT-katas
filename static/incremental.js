@@ -23,7 +23,7 @@ var incremental = {
 	}
     },
 
-    prepare : function() {
+    prepare : function(next) {
 	this.curIndex++;
 	if (this.curIndex < this.elts.length) {
 	    this.curElt = this.elts[this.curIndex];
@@ -38,11 +38,13 @@ var incremental = {
 	    this.byLetter = 
 		this.curElt.dataset.incrementalByLetter !== undefined;
 
-	    setTimeout('incremental.show()', this.pauseBefore);
+	    setTimeout(this.show.bind(this, next), this.pauseBefore);
+	} else if (next) {
+	    next();
 	}
     },
 
-    show : function() {
+    show : function(next) {
 	if (this.byLetter) {
 	    if (!this.text) {
 		this.text = this.curElt.firstChild.data;
@@ -55,15 +57,15 @@ var incremental = {
 		this.curElt.firstChild.data =
 		    this.text.substring(0, this.textIndex);
 		this.textIndex++;
-		setTimeout('incremental.show()', this.speed);
+		setTimeout(this.show.bind(this, next), this.speed);
 	    } else {
 		this.text = undefined;
-		setTimeout('incremental.prepare()', this.pauseAfter);
+		setTimeout(this.prepare.bind(this, next), this.pauseAfter);
 	    }
 	} else {
 	    this.curElt.style.visibility = 'visible';	
 	    this.curElt.appendChild(this.cursor);
-	    setTimeout('incremental.prepare()', this.pauseAfter);
+	    setTimeout(this.prepare.bind(this, next), this.pauseAfter);
 	}
     },
 
@@ -72,16 +74,16 @@ var incremental = {
 	    this.cursor.style.visibility = 'hidden';
 	else
 	    this.cursor.style.visibility = 'visible';
-	setTimeout('incremental.blink()', this.cursorBlink);
+	setTimeout(this.blink.bind(this), this.cursorBlink);
     },
 
-    start : function(ids) {
+    start : function(ids, next) {
 	this.curIndex = -1;
         if (ids)
 	    this.getByIds(ids);
 	else
 	    this.getElts();
-	this.prepare();
+	this.prepare(next);
 
         if (!this.cursor) {
 	    this.cursor = document.createElement('span');
