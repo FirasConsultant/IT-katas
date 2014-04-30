@@ -107,9 +107,10 @@ class DLog(TH):
                      countdown=self._countdown,
                      static=self._static,
                      solve=self._solve,
+                     solution=self._solve and (self._exp if not self._exp2
+                                               else pow(self._g, self._exp*self._exp2, self._p)),
                      level=self._level,
                      max_level=self._max_level,
-                     exp=self._exp,
                      mission=mission,
                      )
         else:

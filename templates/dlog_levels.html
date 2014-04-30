@@ -1031,45 +1031,17 @@ essayons avec un autre algorithme...</p>
 
 <h1 id='gameover' data-incremental-by-letter >Game Over</h1>
 
+<script src="/static/explosion.js"></script>
 <script>
-  var frame = $('<div id="frame"></div>');
-  frame.css('position', 'fixed');
-  frame.css('left', '0');
-  frame.css('top', '0');
-  frame.css('width', '100%');
-  frame.css('height', '100%');
-  frame.css('zIndex', '3');
-  frame.css('overflow', 'hidden');
-  var boom = $('<img id="boom">');
-  $(function() { boom.attr('src', '/static/explosion.png') });
-  boom.css('position', 'absolute');
-  boom.css('width', '100%');
-  boom.css('left', '0%');
-  boom.css('height', '4300%');
-  boom.css('top', '0%');
-  frame.append(boom);
-
-function explode() {
-  $('body').append(frame);
-  var f = 0;
-  function next_frame() {
-    boom.css('top', '-' + f + '00%');
-    f++;
-    if (f < 43)
-      setTimeout(next_frame, 120);
-    else {
-      try {
-        incremental.start(['gameover']);
-      } catch(e) {
-        $('#gameover').css('visibility', 'visible');
-      }
-      setTimeout(function() { window.location.href = '?', 4000 });
-    }
+$(explode.bind(window, function() {
+  try {
+    incremental.start(['gameover'], function() {
+      window.location.href = '?';
+    });
+  } catch(e) {
+    $('#gameover').css('visibility', 'visible');
   }
-  next_frame();
-}
-
-$(explode);
+}));
 </script>
 
 <!-- then -->
