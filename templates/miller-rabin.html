@@ -1,0 +1,258 @@
+{% extends 'main.html' %}
+
+{% block title %}IT Katas - Test de Miller-Rabin{% endblock %}
+
+{% block body %}
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+<p class='incremental' data-incremental-by-letter>Ceci est un code
+rouge, classé de priorité maximale. Tous les agents sont alertés.</p>
+
+<p class='incremental' data-incremental-by-letter>L'ennemi a déclenché
+le programme d'autodestruction atomique et en a changé le code de
+désactivation. Tout ce que nous savons sur le nouveau code de
+désactivation est qu'il est composé de 20 chiffres et qu'il s'agit
+d'un produit de deux nombres premiers.</p>
+
+<p class='incremental' data-incremental-by-letter>Nos experts ont pu
+restreindre le champs de recherche aux codes suivants. Nous savons que
+ce sont tous des nombres premiers sauf un, le code; nous avons besoin
+de votre aide pour le trouver.</p>
+
+<p id='codes' class='incremental'>
+  {% for n in numbers %}
+  <a href='?n={{ n }}' {% if pos == loop.index0 %} class='sol' {% endif %}>{{ n }}</a><br/>
+  {% endfor %}
+</p>
+
+<p class='incremental' data-incremental-by-letter>Dès que vous aurez
+trouvé le bon code, cliquez sur celui-ci. Vous comprenez que nous
+n'avons pas droit à l'erreur, c'est pour cela que nous vous demandons
+de soumettre un témoin de composition avec le code.</p>
+
+{% if not countdown.expired %}
+<p><span  class='incremental' data-incremental-by-letter >
+    Il reste </span>{% include 'countdown.html' %}
+  <span class='incremental' data-incremental-by-letter >
+    avant la fin du monde&nbsp;!</span>
+</p>
+{% else %}
+<p class='incremental' data-incremental-by-letter >Le monde est déjà
+  fini, mais il n'est jamais trop tard pour faire quelques tests de
+  Miller-Rabin.</p>
+{% endif %}
+
+<p class='incremental'>L</p>
+<p class='incremental'></p>
+
+<div id='wit-mask' {% if not n %}class='hidden'{% endif %} ></div>
+<form id='witness' method='get' action='{{ uri_test }}'>
+  <h2>Code: <span id='wit-code'>{{ n }}</span></h2>
+  <input id='wit-n' type='hidden' name='n' value='{{ n }}' />
+  <p>Témoin: <input id='wit-a' type='number' name='a' required /></p>
+  <p><input id='submit' type='submit' value='OK' />
+    <input id='abort' type='button' value='ABORT''/></p>
+  <div id='ctdwn'>
+    <div>4</div><div>3</div><div>2</div><div>1</div><div>0</div>
+    <div>La terre est sauve! Merci, vous êtes un héros!</div>
+  </div>
+</form>
+
+<h1 id='gameover' data-incremental-by-letter >Game Over</h1>
+
+<script src="/static/explosion.js"></script>
+<script>
+$('html').addClass('alert');
+
+$('a').on('click', function(e) {
+  var n = $(this).text();
+  $('#wit-code').html(n);
+  $('#wit-n').val(n);
+  $('#witness, #wit-mask').show();
+  $('#wit-a').focus();
+  return false;
+});
+
+$('#abort').on('click', function() {
+  $('#witness, #wit-mask').hide();
+});
+
+$('#witness').on('submit', function() {
+  var $form = $(this);
+
+  $.ajax({
+    url  : $form.attr('action'),
+    data : $form.serialize(),
+    complete : function(xhr) {
+      $('#ctdwn')
+        .show().addClass('go')
+        .on('animationend webkitAnimationEnd oAnimationEnd', function() {
+          $('html').removeClass('alert');
+          if (xhr.responseText == 'Composite') {
+            $('#ctdwn').addClass('win');
+          } else {
+            explode(function() {
+              $('#gameover').show();
+              try {
+                incremental.start(['gameover'], function() {
+                  window.location.reload();
+                });
+              } catch (e) {
+                setTimeout('window.location.reload()', 1000);
+              }
+            });
+          }
+      });
+    },
+  });
+  return false;
+});
+</script>
+{% endblock body %}
+
+
+{% block extrastyle %}
+a.sol { color: red }
+#codes {
+  word-wrap: break-word;
+  text-align: center;
+  column-count: 3;
+  -moz-column-count: 3;
+  -webkit-column-count: 3;
+}
+#codes br {
+  margin-bottom: 0.5ex;
+}
+
+#abort {
+  color: red;
+  margin-left: 1em;
+}
+#wit-mask, #witness, #gameover { position: fixed; }
+#wit-mask.hidden, #wit-mask.hidden+#witness, #gameover { display: none; }
+
+#wit-mask {
+  width: 100%;  height: 100%;
+  top: 0;  left: 0;
+  z-index: 1;
+}
+#witness {
+  width: 500px;  height: 200px;
+  left: 50%;  top: 50%;
+  z-index: 2;
+  margin-left: -250px;
+  margin-top: -100px;
+  background-color: inherit;
+  text-align: center;
+  border: solid thin green;
+  overflow: hidden;
+}
+#gameover {
+  width: 10em;  height: 1em;
+  left: 50%;  top: 50%;
+  font-size: 400%;
+  text-align: center;
+  margin-left: -5em;
+  margin-top: -0.5em;
+  z-index : 4;
+}
+
+#ctdwn {
+  display: none;
+  background-color: black;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 600%;
+}
+#ctdwn div {
+  font-size: 180px;
+  height: 16.7%;
+  text-align: center;
+  line-height: 1.2;
+}
+#ctdwn div:last-child {
+  padding: 1em;
+  font-size: 2em;
+}
+
+#ctdwn.go {
+  animation: ctdwn 5s ease-in-out both;
+  -webkit-animation: ctdwn 5s ease-in-out both;
+  -o-animation: ctdwn 5s ease-in-out both;
+}
+#ctdwn.win {
+  animation: win 2s ease-in-out both;
+  -webkit-animation: win 2s ease-in-out both;
+  -o-animation: win 2s ease-in-out both;
+}
+@keyframes ctdwn {
+  12%  { top: 0% }
+  34%  { top: -100% }
+  56%  { top: -200% }
+  78%  { top: -300% }
+  100% { top: -400% }
+}
+@keyframes win {
+  0%   { top: -400% }
+  50%  { top: -400% }
+  100% { top: -500% }
+}
+@-webkit-keyframes ctdwn {
+  12%  { top: 0% }
+  34%  { top: -100% }
+  56%  { top: -200% }
+  78%  { top: -300% }
+  100% { top: -400% }
+}
+@-webkit-keyframes win {
+  0%   { top: -400% }
+  50%  { top: -400% }
+  100% { top: -500% }
+}
+@-o-keyframes ctdwn {
+  12%  { top: 0% }
+  34%  { top: -100% }
+  56%  { top: -200% }
+  78%  { top: -300% }
+  100% { top: -400% }
+}
+@-o-keyframes win {
+  0%   { top: -400% }
+  50%  { top: -400% }
+  100% { top: -500% }
+}
+
+html.alert, html.alert body {
+  animation-duration: 3s;
+  animation-name: alert;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-name: alert;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in-out;
+  -o-animation-duration: 3s;
+  -o-animation-name: alert;
+  -o-animation-iteration-count: infinite;
+  -o-animation-timing-function: ease-in-out;
+}
+
+@keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+@-webkit-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+@-o-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+
+{% endblock %}

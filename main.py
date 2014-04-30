@@ -18,6 +18,7 @@ katas = [
     ('dlog', u'Calcul de logarithmes discrets modulo un nombre premier'),
     ('lz78', u'Compression Lempel-Ziv 78'),
     ('vic', u'Chiffre VIC'),
+    ('miller-rabin', u'Test de Miller-Rabin'),
     ]
 
 
