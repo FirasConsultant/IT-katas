@@ -19,6 +19,7 @@ katas = [
     ('lz78', u'Compression Lempel-Ziv 78'),
     ('vic', u'Chiffre VIC'),
     ('miller-rabin', u'Test de Miller-Rabin'),
+    ('p-1', u'Méthode de factorisation p – 1'),
     ]
 
 

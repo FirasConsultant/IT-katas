@@ -1,4 +1,5 @@
 from random import randrange
+import operator
 
 #### Miller-Rabin primality test ####
 
@@ -61,3 +62,20 @@ def next_probable_prime(n):
         return n
     else:
         return next_probable_prime(n+1)
+
+
+#### p-1 factorization ####
+def rand_smooth_prime(random, n=100, k=2):
+    '''
+    Return random prime such that p-1 is n-smooth.
+    
+    Looks for primes of the form n!/a_1 a_2 ... a_k + 1 with random
+    a_i.
+    '''
+    fact = reduce(operator.mul, xrange(1,n))
+    p = 4
+    while miller_rabin(p, 20):
+        cofact = reduce(operator.mul, random.sample(xrange(1,n), k))
+        p = fact/cofact + 1
+
+    return p

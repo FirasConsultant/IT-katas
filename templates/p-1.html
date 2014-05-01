@@ -1,0 +1,132 @@
+{% extends 'main.html' %}
+{% import 'alert.css' as alert %}
+{% import 'modal.html' as modal %}
+
+{% block title %}IT Katas - Méthode de factorisation p – 1{% endblock %}
+
+{% block body %}
+<h2 class='incremental' data-incremental-by-letter>Bonjour, agent {{ agent }}</h2>
+
+<p class='incremental' data-incremental-by-letter>Ceci est un code
+rouge, classé de priorité maximale. Tous les agents sont alertés.</p>
+
+<p class='incremental' data-incremental-by-letter>L'ennemi a déclenché
+le programme d'autodestruction atomique et en a changé le code de
+désactivation. Nous avons une transcription de la connexion qui lui a
+permis de s'infiltrer dans nos systèmes et de changer le code, mais
+celle-ci est chiffrée avec le système RSA. Toutes les unités doivent
+immédiatement se consacrer à la factorisation du module RSA en
+question. Nous les transcrivons ci-dessous.</p>
+
+<p class='incremental nosp' data-incremental-by-letter>{{ n }}</p>
+
+<p class='incremental' data-incremental-by-letter>Si vous parvenez à
+trouver un facteur de ce module, veuillez nous le communiquer au plus
+vite à travers ce terminal.</p>
+
+<form id='factor' class='incremental' action='{{ uri_test }}'>
+  <input type='hidden' name='n' value='{{ n }}' />
+  <textarea name='m' required></textarea>
+  <input type='submit' value='Envoyer' />
+</form>
+
+{% if not countdown.expired %}
+<p><span  class='incremental' data-incremental-by-letter >
+    Il reste </span>{% include 'countdown.html' %}
+  <span class='incremental' data-incremental-by-letter >
+    avant la fin du monde&nbsp;!</span>
+</p>
+{% else %}
+<p class='incremental' data-incremental-by-letter >Le monde est déjà
+  fini, mais il n'est jamais trop tard pour faire quelques tests de
+  Miller-Rabin.</p>
+{% endif %}
+
+<p class='incremental'>L</p>
+<p class='incremental'></p>
+
+{% if p %}
+<p>Hi, boss. Here's the product</p>
+
+<p class='nosp'>{{ p }} * {{ q }}</p>
+{% endif %}
+
+{% call modal.modal('count') %}
+{{ modal.ctdwn('La terre est sauve! Merci, vous êtes un héros!') }}
+{% endcall %}
+
+{{ modal.gameover() }}
+
+
+<script src="/static/explosion.js"></script>
+<script>
+$('html').addClass('alert');
+
+$('#factor textarea').on('keyup', function(e) {
+  e.which == 13 ? $('#factor').submit() : null;
+});
+
+$('#factor').on('submit', function() {
+  var $form = $(this);
+
+  $.ajax({
+    url  : $form.attr('action'),
+    data : $form.serialize(),
+    complete : function(xhr) {
+      modal.show();
+      modal_countdown.start(function() {
+        $('html').removeClass('alert');
+        if (xhr.responseText == 'Yes') {
+          modal_countdown.last();
+        } else {
+          explode(function() {
+            gameover(function() {
+              window.location.reload();
+            });
+          });
+        }
+      });
+    },
+  });
+  return false;
+});
+</script>
+{% endblock body %}
+
+
+{% block extrastyle %}
+#factor { position: relative }
+#factor textarea {
+  background-color: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  margin: auto;
+  height: 6em;
+}
+#factor input {
+  position: absolute;
+  bottom: 3pt;
+  right: 0;
+}
+
+#count {
+  width: 500px;  height: 200px;
+  margin-left: -250px;
+  margin-top: -100px;
+  text-align: center;
+}
+
+#ctdwn div {
+  font-size: 180px;
+  line-height: 1.2;
+}
+#ctdwn div:last-child {
+  padding: 1em;
+  font-size: 2em;
+}
+
+{{ alert.alert('alert') }}
+
+{% endblock %}
+
