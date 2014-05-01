@@ -1,0 +1,32 @@
+{% macro alert(class='') -%}
+html{{ class and ".%s" | format(class) }} {
+  animation-duration: 3s;
+  animation-name: alert;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-name: alert;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in-out;
+  -o-animation-duration: 3s;
+  -o-animation-name: alert;
+  -o-animation-iteration-count: infinite;
+  -o-animation-timing-function: ease-in-out;
+}
+
+@keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+@-webkit-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+@-o-keyframes alert {
+  0%   { background-color: black }
+  50%  { background-color: #600  }
+  100% { background-color: black }
+}
+{%- endmacro %}

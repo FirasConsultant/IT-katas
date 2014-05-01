@@ -1,8 +1,9 @@
-html, body { 
+html { 
     color: green;
     background-color: black;
 }
 body {
+    background-color: inherit;
     padding: 0 1ex;
     font-family: monospace; 
     font-size: 150%

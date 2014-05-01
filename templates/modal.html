@@ -1,0 +1,133 @@
+{% macro modal(id='modal', show=False) -%}
+<div style="background-color: inherit">
+  <style scoped>
+    #{{ id }}-mask {
+      position: fixed;
+      width: 100%;  height: 100%;
+      top: 0;  left: 0;
+      z-index: 1;
+    }
+    #{{ id }} {
+      position: fixed;
+      left: 50%;  top: 50%;
+      z-index: 2;
+      background-color: inherit;
+      border: solid thin green;
+      overflow: hidden;
+    }
+    #{{ id }}.hidden, #{{ id }}.hidden + #{{ id }}-mask {
+      display: none;
+    }
+  </style>
+
+  <div id='{{ id }}' {% if not show %}class='hidden'{% endif %} >
+    {{ caller() }}
+  </div>
+  <div id='{{ id }}-mask'></div>
+
+  <script>
+    var modal = {
+      show: function() {
+        $('#{{ id }}').removeClass('hidden');
+      },
+      hide: function() {
+        $('#{{ id }}').addClass('hidden');
+      },
+      toggle: function() {
+        $('#{{ id }}').toggleClass('hidden');
+      },
+    }
+  </script>
+</div>
+{%- endmacro %}
+
+
+{% macro ctdwn(last, id='ctdwn') -%}
+<div style="background-color: inherit">
+  <style>
+  #{{ id }} {
+    display: none;
+    background-color: inherit;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 600%;
+  }
+  #{{ id }} div {
+    height: 16.7%;
+    text-align: center;
+  }
+
+  {% for prefix in ['', '-webkit-', '-o-'] %}
+    #{{ id }}.go {
+      {{ prefix }}animation: ctdwn 5s ease-in-out both;
+    }
+    #{{ id }}.last {
+      {{ prefix }}animation: last 2s ease-in-out both;
+    }
+    @{{ prefix }}keyframes ctdwn {
+      12%  { top: 0% }
+      34%  { top: -100% }
+      56%  { top: -200% }
+      78%  { top: -300% }
+      100% { top: -400% }
+    }
+    @{{ prefix }}keyframes last {
+      0%   { top: -400% }
+      50%  { top: -400% }
+      100% { top: -500% }
+    }
+  {% endfor %}
+  </style>
+
+  <div id='{{ id }}'>
+    {% for i in range(4,-1,-1) %}<div>{{ i }}</div>{% endfor %}
+    <div>{{ last }}</div>
+  </div>
+
+  <script>
+    var modal_countdown = {
+      start: function(cb) {
+        $('#{{ id }}').show().addClass('go')
+          .one('animationend webkitAnimationEnd oAnimationEnd', cb);
+      },
+      last: function(cb) {
+        $('#{{ id }}').addClass('last')
+          .one('animationend webkitAnimationEnd oAnimationEnd', cb);
+      },
+    }
+  </script>
+</div>
+{% endmacro %}
+
+{% macro gameover(id='gameover') %}
+<div>
+  <style scoped>
+  #{{ id }} {
+    position: fixed; 
+    display: none;
+    width: 10em;  height: 1em;
+    left: 50%;  top: 50%;
+    font-size: 400%;
+    text-align: center;
+    margin-left: -5em;
+    margin-top: -0.5em;
+    z-index : 4;
+  }
+  </style>
+
+  <h1 id='{{ id }}' data-incremental-by-letter >Game Over</h1>
+
+  <script>
+  function gameover(cb) {
+    $('#{{ id }}').show();
+    try {
+      incremental.start(['{{ id }}'], cb);
+    } catch (e) {
+      setTimeout(cb, 1000);
+    }
+  }
+  </script>
+</div>
+{% endmacro %}
